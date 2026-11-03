@@ -37,23 +37,23 @@ export async function Footer({ onHome = true }: { onHome?: boolean }) {
               .filter((l) => l.id !== "contato")
               .map((l) => (
                 <li key={l.id}>
-                  <a href={href(l.id)} className="hover:text-amber inline-flex min-h-9 items-center">
+                  <a href={href(l.id)} className="hover:text-amber inline-flex min-h-11 items-center">
                     {l.label}
                   </a>
                 </li>
               ))}
             <li>
-              <Link href="/entrar/" className="hover:text-amber inline-flex min-h-9 items-center">
+              <Link href="/entrar/" className="hover:text-amber inline-flex min-h-11 items-center">
                 Entrar
               </Link>
             </li>
             <li>
-              <Link href="/cadastro/candidato/" className="hover:text-amber inline-flex min-h-9 items-center">
+              <Link href="/cadastro/candidato/" className="hover:text-amber inline-flex min-h-11 items-center">
                 Criar conta
               </Link>
             </li>
             <li>
-              <Link href="/privacidade/" className="hover:text-amber inline-flex min-h-9 items-center">
+              <Link href="/privacidade/" className="hover:text-amber inline-flex min-h-11 items-center">
                 Política de Privacidade
               </Link>
             </li>
@@ -68,7 +68,7 @@ export async function Footer({ onHome = true }: { onHome?: boolean }) {
             <li>
               <a
                 href={`mailto:${cfg.email}`}
-                className="hover:text-amber inline-flex min-h-9 items-center gap-2.5 break-all"
+                className="hover:text-amber inline-flex min-h-11 items-center gap-2.5 break-all"
               >
                 <Mail className="text-amber size-4 shrink-0" aria-hidden />
                 {cfg.email}
@@ -78,7 +78,7 @@ export async function Footer({ onHome = true }: { onHome?: boolean }) {
               <li>
                 <a
                   href={`tel:${cfg.phone.replace(/\D/g, "")}`}
-                  className="hover:text-amber inline-flex min-h-9 items-center gap-2.5"
+                  className="hover:text-amber inline-flex min-h-11 items-center gap-2.5"
                 >
                   <Phone className="text-amber size-4 shrink-0" aria-hidden />
                   {cfg.phone}

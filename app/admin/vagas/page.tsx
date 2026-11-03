@@ -40,7 +40,7 @@ export default async function AdminVagas({ searchParams }: { searchParams: Promi
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-seed text-sm font-semibold">{v.empresas?.nome}</p>
-                    <Link href={`/admin/vagas/${v.id}/`} className="text-ink text-xl font-semibold break-words underline-offset-4 hover:underline">
+                    <Link href={`/admin/vagas/${v.id}/`} className="text-ink inline-flex min-h-11 items-center text-xl font-semibold break-words underline-offset-4 hover:underline">
                       {v.titulo}
                     </Link>
                   </div>

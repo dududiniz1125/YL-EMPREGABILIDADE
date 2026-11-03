@@ -69,7 +69,7 @@ export function Candidatos() {
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/cadastro/candidato/"
-                className="bg-sprout-deep hover:bg-sprout-deep/90 inline-flex h-14 flex-1 items-center justify-center gap-2 rounded-full text-lg font-semibold text-white shadow-[0_10px_24px_-12px_rgb(63_110_31/0.8)]"
+                className="bg-sprout-deep hover:bg-sprout-deep/90 inline-flex h-14 items-center justify-center gap-2 rounded-full text-lg sm:flex-1 font-semibold text-white shadow-[0_10px_24px_-12px_rgb(63_110_31/0.8)]"
               >
                 Criar minha conta <ArrowRight className="size-5" aria-hidden />
               </Link>

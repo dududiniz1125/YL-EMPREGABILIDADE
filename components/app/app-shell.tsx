@@ -130,7 +130,7 @@ export function AppShell({
       {/* Barra inferior (celular) */}
       <nav
         aria-label={`${title} (atalhos)`}
-        className="border-line bg-card/95 fixed inset-x-0 bottom-0 z-40 border-t pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+        className="app-bottom-nav border-line bg-card/95 fixed inset-x-0 bottom-0 z-40 border-t pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
       >
         <ul className="grid" style={{ gridTemplateColumns: `repeat(${bottom.length}, minmax(0, 1fr))` }}>
           {bottom.map((item) => {

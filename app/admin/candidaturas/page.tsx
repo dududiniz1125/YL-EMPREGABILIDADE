@@ -28,10 +28,10 @@ export default async function AdminCandidaturas({ searchParams }: { searchParams
     <Card className={compact ? "p-3 sm:p-3" : "p-4 sm:p-4"}>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <Link href={`/admin/candidatos/${r.candidatos?.id}/`} className="text-ink block truncate font-semibold underline-offset-4 hover:underline">
+          <Link href={`/admin/candidatos/${r.candidatos?.id}/`} className="text-ink flex min-h-11 items-center truncate font-semibold underline-offset-4 hover:underline">
             {r.candidatos?.nome}
           </Link>
-          <Link href={`/admin/vagas/${r.vagas?.id}/`} className="text-ink-soft block truncate text-sm hover:underline">
+          <Link href={`/admin/vagas/${r.vagas?.id}/`} className="text-ink-soft flex min-h-11 items-center truncate text-sm hover:underline">
             {r.vagas?.titulo} · {r.vagas?.empresas?.nome}
           </Link>
         </div>
@@ -39,7 +39,7 @@ export default async function AdminCandidaturas({ searchParams }: { searchParams
       </div>
       <p className="text-ink-soft mt-1 text-xs">Inscrição em {formatDate(r.created_at)}</p>
       <div className="mt-3">
-        <CandidaturaStatusForm id={r.id} status={r.status} back={back} />
+        <CandidaturaStatusForm id={r.id} status={r.status} back={back} stacked={compact} />
       </div>
     </Card>
   )

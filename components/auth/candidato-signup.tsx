@@ -143,7 +143,7 @@ export function CandidatoSignup({ areas }: { areas: string[] }) {
   return (
     <div>
       <p className="text-sprout-deep font-mono text-xs font-medium tracking-[0.16em] uppercase">
-        Cadastro de candidato · passo {step + 1} de {STEPS.length}
+        Passo {step + 1} de {STEPS.length}
       </p>
       <h1 className="text-ink mt-2 text-3xl font-semibold">{STEPS[step].title}</h1>
       <div

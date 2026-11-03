@@ -114,7 +114,7 @@ export default async function AdminProva({ params, searchParams }: { params: Pro
           <ul className="divide-line divide-y">
             {(notas as unknown as N[]).map((n, i) => (
               <li key={i} className="flex items-center justify-between gap-3 px-5 py-3">
-                <Link href={`/admin/candidatos/${n.candidatos?.id}/`} className="text-ink font-medium underline-offset-4 hover:underline">
+                <Link href={`/admin/candidatos/${n.candidatos?.id}/`} className="text-ink inline-flex min-h-11 items-center font-medium underline-offset-4 hover:underline">
                   {n.candidatos?.nome}
                 </Link>
                 <span className="text-ink-soft text-sm">

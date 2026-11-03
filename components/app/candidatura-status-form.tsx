@@ -4,15 +4,15 @@ import { statusLabel } from "@/components/app/ui"
 const ALL = ["inscrito", "em_analise", "entrevista", "contratado", "nao_selecionado"] as const
 
 /** Muda o status de uma candidatura (admin). Funciona sem JS. */
-export function CandidaturaStatusForm({ id, status, back }: { id: string; status: string; back: string }) {
+export function CandidaturaStatusForm({ id, status, back, stacked }: { id: string; status: string; back: string; stacked?: boolean }) {
   return (
-    <form action={setCandidaturaStatus} className="flex gap-2">
+    <form action={setCandidaturaStatus} className={stacked ? "flex flex-col gap-2" : "flex gap-2"}>
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="back" value={back} />
       <label className="sr-only" htmlFor={`st-${id}`}>
         Status
       </label>
-      <select id={`st-${id}`} name="status" defaultValue={status} className="border-input h-11 min-w-0 flex-1 rounded-xl border bg-white px-3 text-[0.95rem]">
+      <select id={`st-${id}`} name="status" defaultValue={status} className={`border-input h-11 w-full min-w-0 shrink-0 rounded-xl border bg-white px-3 text-[0.95rem] ${stacked ? "" : "flex-1"}`}>
         {ALL.map((s) => (
           <option key={s} value={s}>
             {statusLabel[s]}

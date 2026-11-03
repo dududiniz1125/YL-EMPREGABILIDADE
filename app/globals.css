@@ -220,3 +220,11 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Celular: com o teclado aberto, a barra inferior das áreas logadas some
+   para não cobrir o campo nem o botão de enviar. */
+@media (max-width: 1023px) {
+  body:has(input:not([type="checkbox"]):not([type="radio"]):focus, textarea:focus, select:focus) .app-bottom-nav {
+    display: none;
+  }
+}

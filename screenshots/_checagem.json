@@ -1,0 +1,316 @@
+[
+  {
+    "name": "mobile-site",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-entrar",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-entrar-empresa",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-esqueci-senha",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-cadastro-candidato",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-cadastro-empresa",
+    "overflowX": 0,
+    "small": [
+      "a \"Política de Privacidade\" 19px"
+    ]
+  },
+  {
+    "name": "mobile-privacidade",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-candidato-inicio",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-candidato-vagas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-candidato-candidaturas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-candidato-perfil",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-candidato-provas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-candidato-prova",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-empresa-vagas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-empresa-nova-vaga",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-empresa-inscritos",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-empresa-dados",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-empresa-pendente",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-inicio",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-candidatos",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-candidato-ficha",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-empresas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-vagas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-vaga",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-candidaturas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-provas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-prova",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-configuracoes",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-log",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-conta",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "mobile-admin-mais",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-site",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-entrar",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-entrar-empresa",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-esqueci-senha",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-cadastro-candidato",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-cadastro-empresa",
+    "overflowX": 0,
+    "small": [
+      "a \"Política de Privacidade\" 42px"
+    ]
+  },
+  {
+    "name": "desktop-privacidade",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-candidato-inicio",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-candidato-vagas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-candidato-candidaturas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-candidato-perfil",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-candidato-provas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-candidato-prova",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-empresa-vagas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-empresa-nova-vaga",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-empresa-inscritos",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-empresa-dados",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-empresa-pendente",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-inicio",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-candidatos",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-candidato-ficha",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-empresas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-vagas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-vaga",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-candidaturas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-provas",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-prova",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-configuracoes",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-log",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-conta",
+    "overflowX": 0,
+    "small": []
+  },
+  {
+    "name": "desktop-admin-mais",
+    "overflowX": 0,
+    "small": []
+  }
+]

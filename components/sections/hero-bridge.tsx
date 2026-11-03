@@ -113,7 +113,7 @@ export function HeroBridge() {
           fromRef={c1}
           toRef={yl}
           curvature={30}
-          delay={0.0}
+          delay={1.5}
           {...greenBeam}
         />
         <AnimatedBeam
@@ -121,7 +121,7 @@ export function HeroBridge() {
           fromRef={c2}
           toRef={yl}
           curvature={0}
-          delay={0.6}
+          delay={2.1}
           {...greenBeam}
         />
         <AnimatedBeam
@@ -129,7 +129,7 @@ export function HeroBridge() {
           fromRef={c3}
           toRef={yl}
           curvature={-30}
-          delay={1.2}
+          delay={2.7}
           {...greenBeam}
         />
         <AnimatedBeam
@@ -137,7 +137,7 @@ export function HeroBridge() {
           fromRef={yl}
           toRef={e1}
           curvature={30}
-          delay={1.2}
+          delay={2.7}
           {...brownBeam}
         />
         <AnimatedBeam
@@ -145,7 +145,7 @@ export function HeroBridge() {
           fromRef={yl}
           toRef={e2}
           curvature={0}
-          delay={1.8}
+          delay={3.3}
           {...brownBeam}
         />
         <AnimatedBeam
@@ -153,7 +153,7 @@ export function HeroBridge() {
           fromRef={yl}
           toRef={e3}
           curvature={-30}
-          delay={2.4}
+          delay={3.9}
           {...brownBeam}
         />
       </div>

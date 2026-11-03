@@ -12,7 +12,8 @@
     "test:stack:down": "docker compose -f supabase/test-stack/docker-compose.yml down -v",
     "test:rls": "E2E_NO_SERVER=1 playwright test --project=rls",
     "test:e2e": "playwright test --project=iphone-13 --project=pixel-7 --project=desktop-chrome",
-    "test": "playwright test"
+    "test": "playwright test --project=rls --project=iphone-13 --project=pixel-7 --project=desktop-chrome",
+    "test:screens": "playwright test --project=screens"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.2",

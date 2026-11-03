@@ -74,7 +74,7 @@ export function Navbar({ onHome = true }: { onHome?: boolean }) {
                     href={href(l.id)}
                     aria-current={isActive ? "true" : undefined}
                     className={cn(
-                      "relative rounded-full px-3 py-2 text-[0.92rem] font-medium transition-colors",
+                      "relative inline-flex min-h-11 items-center rounded-full px-3 text-[0.92rem] font-medium transition-colors",
                       isActive ? "text-ink" : "text-ink-soft hover:text-ink"
                     )}
                   >
@@ -82,7 +82,7 @@ export function Navbar({ onHome = true }: { onHome?: boolean }) {
                     <span
                       aria-hidden
                       className={cn(
-                        "bg-sprout-deep absolute inset-x-3 -bottom-0.5 h-0.5 origin-left rounded-full transition-transform duration-300",
+                        "bg-sprout-deep absolute inset-x-3 bottom-1 h-0.5 origin-left rounded-full transition-transform duration-300",
                         isActive ? "scale-x-100" : "scale-x-0"
                       )}
                     />

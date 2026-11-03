@@ -104,7 +104,7 @@ export default async function FichaCandidato({ params, searchParams }: { params:
               <ul className="divide-line mt-3 divide-y">
                 {(cands as unknown as Cand[]).map((x) => (
                   <li key={x.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
-                    <a href={`/admin/vagas/${x.vagas?.id}/`} className="text-ink font-medium underline-offset-4 hover:underline">
+                    <a href={`/admin/vagas/${x.vagas?.id}/`} className="text-ink inline-flex min-h-11 items-center font-medium underline-offset-4 hover:underline">
                       {x.vagas?.titulo} <span className="text-ink-soft">· {x.vagas?.empresas?.nome}</span>
                     </a>
                     <StatusBadge status={x.status} />

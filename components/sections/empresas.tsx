@@ -68,7 +68,7 @@ export function Empresas() {
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/cadastro/empresa/"
-                className="bg-seed hover:bg-seed-deep inline-flex h-14 flex-1 items-center justify-center gap-2 rounded-full text-lg font-semibold text-white shadow-[0_10px_24px_-12px_rgb(138_75_30/0.8)]"
+                className="bg-seed hover:bg-seed-deep inline-flex h-14 items-center justify-center gap-2 rounded-full text-lg sm:flex-1 font-semibold text-white shadow-[0_10px_24px_-12px_rgb(138_75_30/0.8)]"
               >
                 Cadastrar empresa <ArrowRight className="size-5" aria-hidden />
               </Link>

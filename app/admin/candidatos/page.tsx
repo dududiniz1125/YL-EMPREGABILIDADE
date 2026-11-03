@@ -117,7 +117,7 @@ export default async function AdminCandidatos({ searchParams }: { searchParams: 
                 {rows.map((c) => (
                   <tr key={c.id} className="hover:bg-paper-dim/50">
                     <td className="px-4 py-3">
-                      <Link href={`/admin/candidatos/${c.id}/`} className="text-ink font-semibold underline-offset-4 hover:underline">
+                      <Link href={`/admin/candidatos/${c.id}/`} className="text-ink inline-flex min-h-11 items-center font-semibold underline-offset-4 hover:underline">
                         {c.nome}
                       </Link>
                     </td>

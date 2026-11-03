@@ -19,7 +19,7 @@ export function Logo({
   return (
     <Link
       href={href}
-      className={cn("group inline-flex items-center gap-2.5 rounded-lg", className)}
+      className={cn("group inline-flex min-h-11 items-center gap-2.5 rounded-lg", className)}
     >
       <Image
         src="/logo-mark-sm.webp"

@@ -1,29 +1,19 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useSyncExternalStore } from "react"
 import Link from "next/link"
 import { LogIn, UserRound } from "lucide-react"
 
-import { getBrowserSupabase } from "@/lib/supabase/client"
-import { isSupabaseConfigured } from "@/lib/supabase/env"
 import { cn } from "@/lib/utils"
+
+// Só olha se existe o cookie de sessão do Supabase (sem carregar a biblioteca
+// inteira na landing). Quem decide o acesso de verdade é o servidor.
+const hasSession = () => /(?:^|; )sb-[^=]+-auth-token(?:\.0)?=/.test(document.cookie)
+const subscribe = () => () => {}
 
 /** "Entrar" para visitantes e "Minha área" para quem já está logado. */
 export function AuthButton({ className, onNavigate }: { className?: string; onNavigate?: () => void }) {
-  const [logged, setLogged] = useState(false)
-
-  useEffect(() => {
-    if (!isSupabaseConfigured) return
-    const supabase = getBrowserSupabase()
-    let alive = true
-    supabase.auth.getSession().then(({ data }) => alive && setLogged(!!data.session))
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setLogged(!!session))
-    return () => {
-      alive = false
-      sub.subscription.unsubscribe()
-    }
-  }, [])
-
+  const logged = useSyncExternalStore(subscribe, hasSession, () => false)
   return (
     <Link
       href={logged ? "/minha-area/" : "/entrar/"}

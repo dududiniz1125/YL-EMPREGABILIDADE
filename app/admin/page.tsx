@@ -99,7 +99,7 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
             {areasOrdenadas.length === 0 && <li className="text-ink-soft">Nenhum candidato ainda.</li>}
             {areasOrdenadas.slice(0, 8).map(([a, n]) => (
               <li key={a}>
-                <Link href={`/admin/candidatos/?area=${encodeURIComponent(a)}`} className="flex min-h-9 items-center justify-between gap-3">
+                <Link href={`/admin/candidatos/?area=${encodeURIComponent(a)}`} className="flex min-h-11 items-center justify-between gap-3">
                   <span className="text-ink truncate">{a}</span>
                   <span className="bg-sprout-soft text-sprout-deep rounded-full px-2.5 py-0.5 text-sm font-semibold">{n}</span>
                 </Link>
@@ -140,7 +140,7 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
             {(vagasPend.data as unknown as VagaPend[] | null)?.map((v) => (
               <li key={v.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
                 <div className="min-w-0">
-                  <Link href={`/admin/vagas/${v.id}/`} className="text-ink font-semibold underline-offset-4 hover:underline">
+                  <Link href={`/admin/vagas/${v.id}/`} className="text-ink inline-flex min-h-11 items-center font-semibold underline-offset-4 hover:underline">
                     {v.titulo}
                   </Link>
                   <p className="text-ink-soft flex flex-wrap items-center gap-2 text-sm">

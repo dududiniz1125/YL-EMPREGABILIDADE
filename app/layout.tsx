@@ -5,7 +5,8 @@ import { MotionProvider } from "@/components/site/motion-provider"
 import { siteConfig } from "@/lib/site-config"
 import "./globals.css"
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" })
+// Inter sem preload: o LCP é o título em Fraunces; o texto aparece com a fonte do sistema e troca sozinho
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap", preload: false })
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],

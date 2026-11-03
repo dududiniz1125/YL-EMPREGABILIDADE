@@ -24,6 +24,7 @@ export default defineConfig({
   },
   projects: [
     { name: "rls", testMatch: /rls\/.*\.spec\.ts/ },
+    { name: "screens", testMatch: /visual\/.*\.spec\.ts/ },
     // iPhone 13 é emulado no Chromium (mesmo tamanho, toque e user agent do Safari iOS)
     { name: "iphone-13", testMatch: /e2e\/.*\.spec\.ts/, use: { ...devices["iPhone 13"], browserName: "chromium" } },
     { name: "pixel-7", testMatch: /e2e\/.*\.spec\.ts/, use: { ...devices["Pixel 7"] } },

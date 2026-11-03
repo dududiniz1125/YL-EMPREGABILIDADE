@@ -85,7 +85,7 @@ export default async function AdminVaga({ params, searchParams }: { params: Prom
               {lista.map((i) => (
                 <li key={i.id} className="grid gap-2 py-3 sm:grid-cols-[1fr_auto] sm:items-center">
                   <div className="min-w-0">
-                    <Link href={`/admin/candidatos/${i.candidatos?.id}/`} className="text-ink font-semibold underline-offset-4 hover:underline">
+                    <Link href={`/admin/candidatos/${i.candidatos?.id}/`} className="text-ink inline-flex min-h-11 items-center font-semibold underline-offset-4 hover:underline">
                       {i.candidatos?.nome}
                     </Link>
                     <p className="text-ink-soft text-sm">
