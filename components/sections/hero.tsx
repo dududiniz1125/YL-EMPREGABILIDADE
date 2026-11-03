@@ -43,12 +43,14 @@ export function Hero() {
 
           {/* h1 e subtítulo sem fade: aparecem já no HTML (melhor LCP) */}
           <h1
-              id="hero-title"
-              className="text-ink mt-6 text-[2.6rem] leading-[1.05] font-semibold sm:text-6xl lg:text-[4.1rem]"
-            >
+            id="hero-title"
+            className="text-ink mt-6 text-[2.6rem] leading-[1.05] font-semibold sm:text-6xl lg:text-[4.1rem]"
+          >
+            {/* Texto fixo para Google e leitores de tela; a parte animada é só visual */}
+            <span className="sr-only">Conectamos talentos às oportunidades certas</span>
+            <span aria-hidden="true">
               Conectamos{" "}
-              <span className="sr-only">{siteConfig.rotatingRoles.join(", ")}</span>
-              <span aria-hidden className="text-sprout-deep block italic">
+              <span className="text-sprout-deep block italic">
                 <WordRotate
                   words={[...siteConfig.rotatingRoles]}
                   duration={2600}
@@ -61,6 +63,7 @@ export function Hero() {
                 />
               </span>
               às oportunidades certas.
+            </span>
           </h1>
 
           <p className="text-ink-soft mt-6 max-w-xl text-lg leading-relaxed sm:text-xl">

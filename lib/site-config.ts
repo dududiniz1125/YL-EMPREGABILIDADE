@@ -10,11 +10,7 @@ export const siteConfig = {
     "Plataforma de recolocação profissional que conecta pessoas em busca de emprego a empresas com vagas abertas, de forma eficiente e humana.",
 
   // URL pública. Em produção, defina NEXT_PUBLIC_SITE_URL (ex.: https://ylempregabilidade.com.br)
-  url:
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : "https://yl-empregabilidade.vercel.app"),
+  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://yl-empregabilidade.vercel.app").replace(/\/$/, ""),
 
   // Contato
   email: "ylempregabilidade@gmail.com",
