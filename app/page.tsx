@@ -1,7 +1,6 @@
 import { Footer } from "@/components/site/footer"
 import { Navbar } from "@/components/site/navbar"
 import { WhatsappFloat } from "@/components/site/whatsapp-float"
-import { Acesso } from "@/components/sections/acesso"
 import { AreasMarquee } from "@/components/sections/areas-marquee"
 import { Candidatos } from "@/components/sections/candidatos"
 import { ComoFunciona } from "@/components/sections/como-funciona"
@@ -12,6 +11,9 @@ import { Hero } from "@/components/sections/hero"
 import { Numeros } from "@/components/sections/numeros"
 import { QuemSomos } from "@/components/sections/quem-somos"
 import { Sistema } from "@/components/sections/sistema"
+
+// Regenera a cada 5 min (áreas, contatos e números vêm do banco)
+export const revalidate = 300
 
 export default function Home() {
   return (
@@ -27,7 +29,6 @@ export default function Home() {
         <Depoimentos />
         <Candidatos />
         <Empresas />
-        <Acesso />
         <CtaFinal />
       </main>
       <Footer />

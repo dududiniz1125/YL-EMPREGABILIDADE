@@ -4,7 +4,7 @@ import { BlurFade } from "@/components/magicui/blur-fade"
 import { BorderBeam } from "@/components/magicui/border-beam"
 import { SectionHeading } from "@/components/site/section-heading"
 import { WhatsappFeed } from "@/components/sections/whatsapp-feed"
-import { siteConfig } from "@/lib/site-config"
+import { getPublicConfig } from "@/lib/public-config"
 import { cn } from "@/lib/utils"
 
 function Card({
@@ -34,8 +34,9 @@ function CardIcon({ icon: Icon, className }: { icon: typeof ClipboardList; class
   )
 }
 
-export function Sistema() {
-  const areas = siteConfig.areas.filter((a) => a !== "Outra")
+export async function Sistema() {
+  const { areas: all } = await getPublicConfig()
+  const areas = all.filter((a) => a !== "Outra")
   return (
     <section id="sistema" aria-labelledby="sistema-title" className="py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">

@@ -32,77 +32,90 @@ export default function PrivacidadePage() {
           <p>
             A {siteConfig.name} (CNPJ {siteConfig.cnpj}), com sede em {siteConfig.city}, é uma
             plataforma de recolocação profissional que conecta candidatos a empresas. Somos a
-            controladora dos dados pessoais tratados por meio deste site.
+            controladora dos dados pessoais tratados por meio deste site e da plataforma.
           </p>
 
           <H2>2. Dados que coletamos</H2>
-          <p>Coletamos somente os dados que você informa nos formulários do site:</p>
-          <p className="text-ink font-semibold">Cadastro de candidato</p>
+          <p>Coletamos somente o que você informa ao criar sua conta e usar a plataforma:</p>
+          <p className="text-ink font-semibold">Candidatos</p>
           <ul>
-            <li>Nome completo, WhatsApp e, se você quiser, e-mail;</li>
+            <li>Nome completo, WhatsApp, e-mail e senha (a senha é guardada de forma criptografada; ninguém da YL tem acesso a ela);</li>
             <li>Cidade e bairro (não pedimos endereço completo);</li>
-            <li>Área de interesse;</li>
+            <li>Área principal e outras áreas de interesse;</li>
             <li>Até 3 experiências anteriores (empresa, função e tempo), se informadas;</li>
-            <li>Pretensão salarial e disponibilidade de turno, se informadas.</li>
+            <li>Pretensão salarial e disponibilidade de turno, se informadas;</li>
+            <li>Respostas e nota da provinha online da área;</li>
+            <li>Candidaturas às vagas e o andamento de cada uma;</li>
+            <li>Data e hora em que você concordou com esta política.</li>
           </ul>
-          <p className="text-ink font-semibold">Publicação de vaga (empresas)</p>
+          <p className="text-ink font-semibold">Empresas</p>
           <ul>
-            <li>Nome da empresa, CNPJ (opcional), nome do responsável, WhatsApp e e-mail;</li>
+            <li>Nome da empresa, CNPJ (opcional), bairro, nome do responsável, WhatsApp, e-mail e senha;</li>
             <li>
-              Dados da vaga: título, área/função, número de vagas, local de trabalho, data e horário
-              da entrevista, salário/faixa e descrição.
+              Dados das vagas: título, área/função, número de vagas, bairro, salário, data e horário da entrevista e
+              descrição.
             </li>
           </ul>
           <p>
-            Também registramos a sua concordância com esta política no momento do envio. Este site
-            não usa cookies de rastreamento nem ferramentas de publicidade.
+            Para manter você conectado, usamos apenas cookies essenciais de sessão. Este site não usa cookies de
+            rastreamento nem ferramentas de publicidade.
           </p>
 
-          <H2>3. Como usamos seus dados</H2>
+          <H2>3. Onde os dados ficam</H2>
           <p>
-            Usamos os dados exclusivamente para conectar candidatos a oportunidades de emprego
-            compatíveis com seu perfil, enviar a provinha online da área escolhida, avisar sobre
-            vagas e entrevistas (principalmente pelo WhatsApp) e informar às empresas sobre
-            candidatos disponíveis. Não vendemos seus dados.
+            Os dados ficam salvos em um banco de dados na plataforma <strong className="text-ink">Supabase</strong>,
+            com acesso protegido por conta e senha e regras que limitam o que cada pessoa pode ver. O site é hospedado
+            na <strong className="text-ink">Vercel</strong>. A cada novo cadastro, a equipe recebe um aviso por e-mail
+            pelo <strong className="text-ink">Formspree</strong>, só com nome, área e cidade.
           </p>
 
-          <H2>4. Com quem compartilhamos</H2>
+          <H2>4. Como usamos seus dados</H2>
+          <p>
+            Usamos os dados exclusivamente para conectar candidatos a vagas compatíveis, aplicar a provinha da área,
+            avisar sobre vagas e entrevistas (principalmente pelo WhatsApp) e apoiar as empresas na seleção. Não
+            vendemos seus dados.
+          </p>
+
+          <H2>5. Quem tem acesso</H2>
           <ul>
             <li>
-              <strong className="text-ink">Empresas com vagas compatíveis:</strong> apresentamos o perfil
-              do candidato às empresas que têm vagas alinhadas à área de interesse dele.
+              <strong className="text-ink">Você:</strong> vê e edita o seu próprio cadastro, suas candidaturas e sua nota.
             </li>
             <li>
-              <strong className="text-ink">Formspree</strong>: serviço usado como operador para receber e
-              encaminhar o envio dos formulários deste site até a nossa equipe.
+              <strong className="text-ink">Equipe YL:</strong> acessa os cadastros para fazer a ponte entre candidatos
+              e empresas.
             </li>
             <li>
-              <strong className="text-ink">Ferramentas de comunicação e gestão</strong> que usamos na
-              operação (como a plataforma de atendimento por WhatsApp e os painéis de acompanhamento),
-              sempre para as finalidades descritas aqui.
+              <strong className="text-ink">Empresas:</strong> veem apenas os candidatos que se inscreveram nas vagas
+              delas, e só nome, área, experiências e nota da prova. O WhatsApp do candidato só aparece para a empresa
+              quando ele chega à etapa de entrevista. Empresas não veem e-mail, cidade nem pretensão salarial.
+            </li>
+            <li>
+              <strong className="text-ink">Fornecedores</strong> que operam a plataforma (Supabase, Vercel, Formspree e
+              as ferramentas de atendimento por WhatsApp e de painéis que usamos), sempre para as finalidades descritas
+              aqui.
             </li>
             <li>Autoridades, quando exigido por lei.</li>
           </ul>
 
-          <H2>5. Base legal (LGPD)</H2>
+          <H2>6. Base legal (LGPD)</H2>
           <p>
-            O tratamento é feito com base no seu consentimento (Art. 7º, I, da Lei 13.709/2018) e
-            na execução de procedimentos preliminares relacionados a um contrato de trabalho do qual
-            você seja parte (Art. 7º, V). Você pode revogar o consentimento a qualquer momento.
+            O tratamento é feito com base no seu consentimento (Art. 7º, I, da Lei 13.709/2018) e na execução de
+            procedimentos preliminares relacionados a um contrato de trabalho (Art. 7º, V). Você pode revogar o
+            consentimento a qualquer momento.
           </p>
 
-          <H2>6. Por quanto tempo guardamos</H2>
+          <H2>7. Seus direitos e como excluir sua conta</H2>
           <p>
-            Mantemos os dados enquanto o seu cadastro estiver ativo ou pelo tempo necessário para as
-            finalidades acima. Você pode pedir a exclusão quando quiser.
-          </p>
-
-          <H2>7. Seus direitos</H2>
-          <p>
-            Nos termos da LGPD, você pode: confirmar se tratamos seus dados; acessá-los; corrigir
-            dados incompletos ou desatualizados; pedir anonimização, bloqueio ou eliminação de dados
-            desnecessários; pedir a portabilidade; saber com quem compartilhamos; e revogar seu
+            Nos termos da LGPD, você pode confirmar se tratamos seus dados, acessá-los, corrigi-los, pedir
+            anonimização, bloqueio ou eliminação, pedir a portabilidade, saber com quem compartilhamos e revogar seu
             consentimento.
+          </p>
+          <p>
+            <strong className="text-ink">Para excluir sua conta:</strong> candidatos podem fazer isso sozinhos em{" "}
+            <em>Minha área → Perfil → Excluir minha conta</em>. A exclusão apaga na hora o cadastro, as candidaturas e
+            a nota da prova. Empresas, ou quem preferir, podem pedir a exclusão pelo e-mail abaixo; atendemos no prazo
+            previsto na LGPD. Mantemos os dados enquanto a conta estiver ativa.
           </p>
 
           <H2>8. Contato</H2>

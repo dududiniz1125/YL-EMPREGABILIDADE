@@ -4,9 +4,11 @@ import { Mail, MapPin, Phone } from "lucide-react"
 
 import { CurrentYear } from "@/components/site/current-year"
 import { navLinks } from "@/lib/nav"
+import { getPublicConfig } from "@/lib/public-config"
 import { siteConfig } from "@/lib/site-config"
 
-export function Footer({ onHome = true }: { onHome?: boolean }) {
+export async function Footer({ onHome = true }: { onHome?: boolean }) {
+  const cfg = await getPublicConfig()
   const href = (id: string) => (onHome ? `#${id}` : `/#${id}`)
   return (
     <footer id="contato" className="bg-ink text-paper/85 scroll-mt-20">
@@ -41,6 +43,16 @@ export function Footer({ onHome = true }: { onHome?: boolean }) {
                 </li>
               ))}
             <li>
+              <Link href="/entrar/" className="hover:text-amber inline-flex min-h-9 items-center">
+                Entrar
+              </Link>
+            </li>
+            <li>
+              <Link href="/cadastro/candidato/" className="hover:text-amber inline-flex min-h-9 items-center">
+                Criar conta
+              </Link>
+            </li>
+            <li>
               <Link href="/privacidade/" className="hover:text-amber inline-flex min-h-9 items-center">
                 Política de Privacidade
               </Link>
@@ -55,27 +67,27 @@ export function Footer({ onHome = true }: { onHome?: boolean }) {
           <ul className="mt-4 space-y-3">
             <li>
               <a
-                href={`mailto:${siteConfig.email}`}
+                href={`mailto:${cfg.email}`}
                 className="hover:text-amber inline-flex min-h-9 items-center gap-2.5 break-all"
               >
                 <Mail className="text-amber size-4 shrink-0" aria-hidden />
-                {siteConfig.email}
+                {cfg.email}
               </a>
             </li>
-            {siteConfig.phone && (
+            {cfg.phone && (
               <li>
                 <a
-                  href={`tel:${siteConfig.phone.replace(/\D/g, "")}`}
+                  href={`tel:${cfg.phone.replace(/\D/g, "")}`}
                   className="hover:text-amber inline-flex min-h-9 items-center gap-2.5"
                 >
                   <Phone className="text-amber size-4 shrink-0" aria-hidden />
-                  {siteConfig.phone}
+                  {cfg.phone}
                 </a>
               </li>
             )}
             <li className="flex items-start gap-2.5">
               <MapPin className="text-amber mt-1 size-4 shrink-0" aria-hidden />
-              <span>{siteConfig.address ? `${siteConfig.address} · ` : ""}{siteConfig.city}</span>
+              <span>{cfg.address ? `${cfg.address} · ` : ""}{siteConfig.city}</span>
             </li>
           </ul>
         </div>

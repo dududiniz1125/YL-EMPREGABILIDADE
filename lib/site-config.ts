@@ -58,7 +58,7 @@ export const siteConfig = {
 
   // Funcionalidades futuras
   features: {
-    login: false as boolean, // liga a área de login quando houver autenticação de verdade
+    login: true as boolean, // liga a área de login quando houver autenticação de verdade
     depoimentos: false as boolean, // liga a seção de depoimentos (preencha `depoimentos` abaixo)
   },
 

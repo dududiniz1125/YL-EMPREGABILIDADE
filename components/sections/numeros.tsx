@@ -1,11 +1,11 @@
 import { NumberTicker } from "@/components/magicui/number-ticker"
 import { SectionHeading } from "@/components/site/section-heading"
-import { siteConfig } from "@/lib/site-config"
+import { getPublicConfig } from "@/lib/public-config"
 
-/** Só aparece com stats.enabled = true e valores reais no site-config. */
-export function Numeros() {
-  const s = siteConfig.stats
-  if (!s.enabled) return null
+/** Números reais do banco. Só aparece quando o admin liga em Configurações. */
+export async function Numeros() {
+  const { stats: s } = await getPublicConfig()
+  if (!s) return null
   const items = [
     { label: "candidatos cadastrados", value: s.candidatos },
     { label: "vagas abertas", value: s.vagas },

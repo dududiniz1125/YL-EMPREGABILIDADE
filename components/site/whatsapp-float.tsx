@@ -1,5 +1,5 @@
 import { PulsatingButton } from "@/components/magicui/pulsating-button"
-import { whatsappLink } from "@/lib/site-config"
+import { getPublicConfig, whatsappHref } from "@/lib/public-config"
 
 /** Ícone genérico de balão de conversa com telefone (sem marca registrada). */
 function ChatIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -19,8 +19,9 @@ function ChatIcon(props: React.SVGProps<SVGSVGElement>) {
   )
 }
 
-export function WhatsappFloat() {
-  const href = whatsappLink()
+export async function WhatsappFloat() {
+  const { whatsapp } = await getPublicConfig()
+  const href = whatsappHref(whatsapp)
   if (!href) return null
   return (
     <a

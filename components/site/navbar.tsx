@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Menu } from "lucide-react"
 
 import { ScrollProgress } from "@/components/magicui/scroll-progress"
+import { AuthButton } from "@/components/site/auth-button"
 import { Logo } from "@/components/site/logo"
 import {
   Sheet,
@@ -93,6 +94,7 @@ export function Navbar({ onHome = true }: { onHome?: boolean }) {
         </nav>
 
         <div className="flex items-center gap-2">
+          <AuthButton className="hidden sm:inline-flex" />
           <div className="hidden items-center gap-2 md:flex">
             <a
               href={href("candidatos")}
@@ -102,7 +104,7 @@ export function Navbar({ onHome = true }: { onHome?: boolean }) {
             </a>
             <a
               href={href("empresas")}
-              className="border-seed/30 text-seed-deep hover:bg-seed-soft inline-flex h-11 items-center rounded-full border bg-white/60 px-5 text-sm font-semibold transition-colors"
+              className="border-seed/30 text-seed-deep hover:bg-seed-soft hidden h-11 items-center rounded-full border bg-white/60 px-5 text-sm font-semibold transition-colors xl:inline-flex"
             >
               Sou empresa
             </a>
@@ -143,6 +145,10 @@ export function Navbar({ onHome = true }: { onHome?: boolean }) {
                 </ul>
               </nav>
               <div className="mt-auto flex flex-col gap-3 p-6">
+                <AuthButton
+                  onNavigate={() => setOpen(false)}
+                  className="border-line h-12 border bg-white text-base"
+                />
                 <a
                   href={href("candidatos")}
                   onClick={() => setOpen(false)}
