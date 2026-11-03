@@ -25,12 +25,15 @@ const labels: Record<string, string> = {
 }
 
 export default async function AdminLog() {
-  await requireRole("admin")
-  const { data } = await (await getServerSupabase())
-    .from("admin_log")
-    .select("id, acao, alvo_tipo, alvo_id, detalhes, created_at, profiles(nome)")
-    .order("created_at", { ascending: false })
-    .limit(200)
+  const supabase = await getServerSupabase()
+  const [, { data }] = await Promise.all([
+    requireRole("admin"),
+    supabase
+      .from("admin_log")
+      .select("id, acao, alvo_tipo, detalhes, created_at, profiles(nome)")
+      .order("created_at", { ascending: false })
+      .limit(200),
+  ])
   type Row = { id: number; acao: string; alvo_tipo: string | null; detalhes: Record<string, unknown>; created_at: string; profiles: { nome: string } | null }
   const rows = (data ?? []) as unknown as Row[]
   return (

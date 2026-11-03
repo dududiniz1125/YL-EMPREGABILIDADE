@@ -12,14 +12,13 @@ const COLS = ["inscrito", "em_analise", "entrevista", "contratado", "nao_selecio
 
 export default async function AdminCandidaturas({ searchParams }: { searchParams: Promise<{ status?: string; ok?: string }> }) {
   const sp = await searchParams
-  await requireRole("admin")
   let q = (await getServerSupabase())
     .from("candidaturas")
     .select("id, status, created_at, candidatos(id, nome), vagas(id, titulo, empresas(nome))")
     .order("updated_at", { ascending: false })
     .limit(500)
   if (sp.status) q = q.eq("status", sp.status)
-  const { data } = await q
+  const [, { data }] = await Promise.all([requireRole("admin"), q])
   type Row = { id: string; status: string; created_at: string; candidatos: { id: string; nome: string } | null; vagas: { id: string; titulo: string; empresas: { nome: string } | null } | null }
   const rows = (data ?? []) as unknown as Row[]
   const back = `/admin/candidaturas/${sp.status ? `?status=${sp.status}` : ""}`

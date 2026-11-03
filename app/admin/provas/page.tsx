@@ -11,9 +11,9 @@ import { getServerSupabase } from "@/lib/supabase/server"
 
 export default async function AdminProvas({ searchParams }: { searchParams: Promise<{ ok?: string; erro?: string }> }) {
   const sp = await searchParams
-  await requireRole("admin")
   const db = await getServerSupabase()
-  const [{ data }, { areas }] = await Promise.all([
+  const [, { data }, { areas }] = await Promise.all([
+    requireRole("admin"),
     db.from("provas").select("id, area, titulo, ativa, questoes(count), respostas_prova(count)").order("area"),
     getPublicConfig(),
   ])

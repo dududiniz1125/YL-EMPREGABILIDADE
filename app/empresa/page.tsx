@@ -9,13 +9,15 @@ import { getServerSupabase } from "@/lib/supabase/server"
 
 export default async function EmpresaHome({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const sp = await searchParams
-  const s = await requireRole("empresa")
   const supabase = await getServerSupabase()
-  const { data: vagas } = await supabase
-    .from("vagas")
-    .select("id, titulo, area, status, salario, entrevista_em, created_at, candidaturas(count)")
-    .eq("empresa_id", s.userId)
-    .order("created_at", { ascending: false })
+  // RLS: a empresa só enxerga as próprias vagas
+  const [, { data: vagas }] = await Promise.all([
+    requireRole("empresa"),
+    supabase
+      .from("vagas")
+      .select("id, titulo, area, status, salario, entrevista_em, created_at, candidaturas(count)")
+      .order("created_at", { ascending: false }),
+  ])
   type Row = { id: string; titulo: string; area: string; status: string; salario: number | null; entrevista_em: string | null; candidaturas: { count: number }[] }
   const rows = (vagas ?? []) as unknown as Row[]
 

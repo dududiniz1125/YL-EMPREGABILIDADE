@@ -23,10 +23,13 @@ function Field({ label, children, hint }: { label: string; children: React.React
 
 export default async function PerfilPage({ searchParams }: { searchParams: Promise<{ ok?: string; erro?: string }> }) {
   const sp = await searchParams
-  const s = await requireRole("candidato")
   const supabase = await getServerSupabase()
-  const [{ data: c }, { areas }] = await Promise.all([
-    supabase.from("candidatos").select("*").eq("id", s.userId).single(),
+  const [, { data: c }, { areas }] = await Promise.all([
+    requireRole("candidato"),
+    supabase
+      .from("candidatos")
+      .select("nome, whatsapp, email, cidade, area_principal, outras_areas, pretensao_salarial, turnos, experiencias")
+      .maybeSingle(),
     getPublicConfig(),
   ])
   if (!c) return null

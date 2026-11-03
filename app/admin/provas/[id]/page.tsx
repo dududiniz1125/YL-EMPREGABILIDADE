@@ -46,11 +46,11 @@ function QuestaoForm({ provaId, q, ordem }: { provaId: string; q?: Q; ordem: num
 
 export default async function AdminProva({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ ok?: string; erro?: string }> }) {
   const [{ id }, sp] = await Promise.all([params, searchParams])
-  await requireRole("admin")
   const db = await getServerSupabase()
-  const [{ data: p }, { data: qs }, { data: notas }] = await Promise.all([
-    db.from("provas").select("*").eq("id", id).maybeSingle(),
-    db.from("questoes").select("*").eq("prova_id", id).order("ordem").order("id"),
+  const [, { data: p }, { data: qs }, { data: notas }] = await Promise.all([
+    requireRole("admin"),
+    db.from("provas").select("id, area, titulo, ativa").eq("id", id).maybeSingle(),
+    db.from("questoes").select("id, ordem, enunciado, alternativas, correta").eq("prova_id", id).order("ordem").order("id"),
     db.from("respostas_prova").select("nota, acertos, total, created_at, candidatos(id, nome)").eq("prova_id", id).order("nota", { ascending: false }),
   ])
   if (!p) notFound()

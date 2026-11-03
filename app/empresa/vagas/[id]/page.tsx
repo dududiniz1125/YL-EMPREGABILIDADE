@@ -7,7 +7,7 @@ import { ButtonLink, Card, EmptyState, Flash, StatusBadge } from "@/components/a
 import { VagaForm } from "@/components/app/vaga-form"
 import { editarVaga, encerrarVaga, mudarStatusInscrito } from "@/app/empresa/actions"
 import { requireRole } from "@/lib/auth"
-import type { Experiencia, Vaga } from "@/lib/data"
+import { VAGA_COLS, type Experiencia, type Vaga } from "@/lib/data"
 import { onlyDigitsPhone } from "@/lib/parse"
 import { getPublicConfig } from "@/lib/public-config"
 import { getServerSupabase } from "@/lib/supabase/server"
@@ -24,11 +24,15 @@ const flash: Record<string, string> = { salva: "Vaga atualizada.", encerrada: "V
 
 export default async function VagaEmpresaPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ ok?: string; erro?: string }> }) {
   const [{ id }, sp] = await Promise.all([params, searchParams])
-  await requireRole("empresa")
   const supabase = await getServerSupabase()
-  const [{ data: vaga }, { data: inscritos }, { areas }] = await Promise.all([
-    supabase.from("vagas").select("*").eq("id", id).maybeSingle(),
-    supabase.from("inscritos_empresa").select("*").eq("vaga_id", id).order("created_at"),
+  const [, { data: vaga }, { data: inscritos }, { areas }] = await Promise.all([
+    requireRole("empresa"),
+    supabase.from("vagas").select(VAGA_COLS).eq("id", id).maybeSingle(),
+    supabase
+      .from("inscritos_empresa")
+      .select("candidatura_id, status, nome, area_principal, experiencias, nota_prova, whatsapp")
+      .eq("vaga_id", id)
+      .order("created_at"),
     getPublicConfig(),
   ])
   if (!vaga) notFound()

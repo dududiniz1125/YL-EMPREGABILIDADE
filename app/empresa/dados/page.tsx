@@ -18,8 +18,11 @@ function F({ label, children }: { label: string; children: React.ReactNode }) {
 
 export default async function DadosEmpresaPage({ searchParams }: { searchParams: Promise<{ ok?: string; erro?: string }> }) {
   const sp = await searchParams
-  const s = await requireRole("empresa")
-  const { data: e } = await (await getServerSupabase()).from("empresas").select("*").eq("id", s.userId).single()
+  const supabase = await getServerSupabase()
+  const [, { data: e }] = await Promise.all([
+    requireRole("empresa"),
+    supabase.from("empresas").select("nome, cnpj, responsavel, whatsapp, email, bairro, status").maybeSingle(),
+  ])
   if (!e) return null
   return (
     <>

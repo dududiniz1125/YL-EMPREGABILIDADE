@@ -10,12 +10,14 @@ import { cn } from "@/lib/utils"
 const FLUXO = ["inscrito", "em_analise", "entrevista", "contratado"] as const
 
 export default async function CandidaturasPage() {
-  await requireRole("candidato")
   const supabase = await getServerSupabase()
-  const { data } = await supabase
-    .from("candidaturas")
-    .select("id, status, created_at, vagas(titulo, area, bairro, entrevista_em, status), candidatura_eventos(status, created_at)")
-    .order("created_at", { ascending: false })
+  const [, { data }] = await Promise.all([
+    requireRole("candidato"),
+    supabase
+      .from("candidaturas")
+      .select("id, status, created_at, vagas(titulo, area, bairro, entrevista_em, status), candidatura_eventos(status, created_at)")
+      .order("created_at", { ascending: false }),
+  ])
 
   type Row = {
     id: string

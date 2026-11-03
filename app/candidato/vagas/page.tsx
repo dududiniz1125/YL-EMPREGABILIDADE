@@ -5,19 +5,22 @@ import { VagaCard } from "@/components/app/vaga-card"
 import { inputClass } from "@/components/forms/fields"
 import { candidatar } from "@/app/candidato/actions"
 import { requireRole } from "@/lib/auth"
-import type { Vaga } from "@/lib/data"
+import { VAGA_COLS, type Vaga } from "@/lib/data"
 import { getPublicConfig } from "@/lib/public-config"
 import { getServerSupabase } from "@/lib/supabase/server"
 
 export default async function VagasPage({ searchParams }: { searchParams: Promise<{ area?: string; bairro?: string; ok?: string; erro?: string }> }) {
   const sp = await searchParams
-  await requireRole("candidato")
   const supabase = await getServerSupabase()
-  const { areas } = await getPublicConfig()
-  let q = supabase.from("vagas").select("*").eq("status", "aberta").order("created_at", { ascending: false }).limit(100)
+  let q = supabase.from("vagas").select(VAGA_COLS).eq("status", "aberta").order("created_at", { ascending: false }).limit(100)
   if (sp.area) q = q.eq("area", sp.area)
   if (sp.bairro) q = q.ilike("bairro", `%${sp.bairro.replace(/[%_]/g, "")}%`)
-  const [{ data: vagas }, { data: minhas }] = await Promise.all([q, supabase.from("candidaturas").select("vaga_id, status")])
+  const [, { areas }, { data: vagas }, { data: minhas }] = await Promise.all([
+    requireRole("candidato"),
+    getPublicConfig(),
+    q,
+    supabase.from("candidaturas").select("vaga_id, status"),
+  ])
   const inscritas = new Map((minhas ?? []).map((c) => [c.vaga_id, c.status]))
   const back = `/candidato/vagas/?${new URLSearchParams({ ...(sp.area ? { area: sp.area } : {}), ...(sp.bairro ? { bairro: sp.bairro } : {}) })}`
 

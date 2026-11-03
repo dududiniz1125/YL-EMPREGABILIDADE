@@ -4,6 +4,7 @@ import { cache } from "react"
 import { redirect } from "next/navigation"
 
 import { roleHome, type Role } from "@/lib/roles"
+import { verifyAccessToken } from "@/lib/supabase/claims"
 import { isSupabaseConfigured } from "@/lib/supabase/env"
 import { getServerSupabase } from "@/lib/supabase/server"
 
@@ -19,15 +20,21 @@ export type Session = {
 export const getSession = cache(async (): Promise<Session | null> => {
   if (!isSupabaseConfigured) return null
   const supabase = await getServerSupabase()
+  // id do usuário a partir do token (validado localmente) para já buscar o perfil...
   const {
-    data: { user },
-  } = await supabase.auth.getUser()
+    data: { session },
+  } = await supabase.auth.getSession()
+  const claims = await verifyAccessToken(session?.access_token)
+  const profileQuery = (id: string) =>
+    supabase.from("profiles").select("role, nome, must_change_password").eq("id", id).maybeSingle()
+  // ...em paralelo com a checagem completa no servidor de Auth (getUser)
+  const [{ data: userData }, early] = await Promise.all([
+    supabase.auth.getUser(),
+    claims ? profileQuery(claims.sub) : Promise.resolve(null),
+  ])
+  const user = userData.user
   if (!user) return null
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role, nome, must_change_password")
-    .eq("id", user.id)
-    .maybeSingle()
+  const profile = early && claims?.sub === user.id ? early.data : (await profileQuery(user.id)).data
   if (!profile) return null
   return {
     userId: user.id,
@@ -55,3 +62,17 @@ export async function assertRole(role: Role): Promise<Session> {
   if (!s || s.role !== role) throw new Error("Acesso negado")
   return s
 }
+
+/**
+ * Id do usuário lido do token (validado localmente, sem ir à rede). Serve só
+ * para começar as consultas em paralelo; a RLS e o requireRole() continuam
+ * valendo para tudo.
+ */
+export const getUserIdFast = cache(async (): Promise<string | null> => {
+  if (!isSupabaseConfigured) return null
+  const supabase = await getServerSupabase()
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+  return (await verifyAccessToken(session?.access_token))?.sub ?? null
+})

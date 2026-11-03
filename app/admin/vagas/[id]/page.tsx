@@ -9,7 +9,7 @@ import { VagaForm } from "@/components/app/vaga-form"
 import { inputClass } from "@/components/forms/fields"
 import { editarVagaAdmin, indicarCandidato, setVagaStatus } from "@/app/admin/actions"
 import { requireRole } from "@/lib/auth"
-import type { Vaga } from "@/lib/data"
+import { VAGA_COLS, type Vaga } from "@/lib/data"
 import { getPublicConfig } from "@/lib/public-config"
 import { getServerSupabase } from "@/lib/supabase/server"
 
@@ -21,15 +21,15 @@ const erros: Record<string, string> = {
 
 export default async function AdminVaga({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ ok?: string; erro?: string; busca?: string }> }) {
   const [{ id }, sp] = await Promise.all([params, searchParams])
-  await requireRole("admin")
   const db = await getServerSupabase()
-  const [{ data: vaga }, { data: inscritos }, { areas }] = await Promise.all([
-    db.from("vagas").select("*, empresas(nome, status)").eq("id", id).maybeSingle(),
+  const [, { data: vaga }, { data: inscritos }, { areas }] = await Promise.all([
+    requireRole("admin"),
+    db.from("vagas").select(`${VAGA_COLS}, empresas(nome, status)`).eq("id", id).maybeSingle(),
     db.from("candidaturas").select("id, status, indicada_por_admin, created_at, candidatos(id, nome, area_principal, whatsapp)").eq("vaga_id", id).order("created_at"),
     getPublicConfig(),
   ])
   if (!vaga) notFound()
-  const v = vaga as Vaga & { empresas: { nome: string; status: string } | null }
+  const v = vaga as unknown as Vaga & { empresas: { nome: string; status: string } | null }
   const { data: sugestoes } = sp.busca
     ? await db.from("candidatos").select("id, nome, area_principal, cidade").ilike("nome", `%${sp.busca.replace(/[%_,()]/g, "")}%`).limit(8)
     : await db.from("candidatos").select("id, nome, area_principal, cidade").eq("area_principal", v.area).eq("status", "ativo").limit(8)

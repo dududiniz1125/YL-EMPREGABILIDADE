@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr"
 
 import { areaOf } from "@/lib/roles"
 import { applyRemember, readRemember } from "@/lib/supabase/cookies"
+import { verifyAccessToken, type Claims } from "@/lib/supabase/claims"
 import { isSupabaseConfigured, SUPABASE_ANON_KEY, SUPABASE_URL } from "@/lib/supabase/env"
 
 /**
@@ -40,9 +41,11 @@ export async function proxy(request: NextRequest) {
     },
   })
 
+  // Lê a sessão do cookie (só vai à rede para renovar um token vencido) e
+  // valida o JWT localmente. A checagem completa (getUser) fica nas páginas.
   const {
-    data: { user },
-  } = await supabase.auth.getUser()
+    data: { session },
+  } = await supabase.auth.getSession()
 
   if (!area) return response
 
@@ -52,10 +55,21 @@ export async function proxy(request: NextRequest) {
     return r
   }
 
-  if (!user) return redirect(toLogin())
+  let c = await verifyAccessToken(session?.access_token)
+  if (!c && session) {
+    // não deu para validar localmente (ex.: sem SUPABASE_JWT_SECRET): pergunta ao Auth
+    const { data } = await supabase.auth.getClaims()
+    c = (data?.claims as Claims | undefined) ?? null
+  }
+  if (!c) return redirect(toLogin())
 
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle()
-  if (!profile || profile.role !== area) return redirect(toLogin("sem-permissao"))
+  let role = c.app_metadata?.role
+  if (!role) {
+    // token antigo, de antes do papel ir no token: consulta o perfil
+    const { data: profile } = await supabase.from("profiles").select("role").eq("id", c.sub).maybeSingle()
+    role = profile?.role
+  }
+  if (role !== area) return redirect(toLogin("sem-permissao"))
 
   return response
 }

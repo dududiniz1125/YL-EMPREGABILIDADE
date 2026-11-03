@@ -7,23 +7,25 @@ import { VagaCard } from "@/components/app/vaga-card"
 import { candidatar } from "@/app/candidato/actions"
 import { SubmitButton } from "@/components/app/confirm-submit"
 import { requireRole } from "@/lib/auth"
-import type { Vaga } from "@/lib/data"
+import { VAGA_COLS, type Vaga } from "@/lib/data"
 import { getServerSupabase } from "@/lib/supabase/server"
 
 export default async function CandidatoHome({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const sp = await searchParams
-  const s = await requireRole("candidato")
   const supabase = await getServerSupabase()
-  const { data: cand } = await supabase.from("candidatos").select("nome, area_principal, status").eq("id", s.userId).single()
-  const area = cand?.area_principal ?? ""
-  const [{ data: prova }, { data: vagas }, { data: minhas }] = await Promise.all([
-    supabase.from("provas").select("id, titulo").eq("area", area).maybeSingle(),
-    supabase.from("vagas").select("*").eq("status", "aberta").eq("area", area).order("created_at", { ascending: false }).limit(4),
+  // RLS: o candidato só enxerga o próprio cadastro, candidaturas e notas
+  const [, { data: cand }, { data: minhas }, { data: notas }] = await Promise.all([
+    requireRole("candidato"),
+    supabase.from("candidatos").select("nome, area_principal, status").maybeSingle(),
     supabase.from("candidaturas").select("vaga_id, status"),
+    supabase.from("respostas_prova").select("prova_id, nota"),
   ])
-  const { data: resposta } = prova
-    ? await supabase.from("respostas_prova").select("nota").eq("prova_id", prova.id).eq("candidato_id", s.userId).maybeSingle()
-    : { data: null }
+  const area = cand?.area_principal ?? ""
+  const [{ data: prova }, { data: vagas }] = await Promise.all([
+    supabase.from("provas").select("id, titulo").eq("area", area).maybeSingle(),
+    supabase.from("vagas").select(VAGA_COLS).eq("status", "aberta").eq("area", area).order("created_at", { ascending: false }).limit(4),
+  ])
+  const resposta = prova ? (notas ?? []).find((n) => n.prova_id === prova.id) ?? null : null
   const inscritas = new Map((minhas ?? []).map((c) => [c.vaga_id, c.status]))
   const primeiroNome = (cand?.nome ?? "").split(" ")[0]
 

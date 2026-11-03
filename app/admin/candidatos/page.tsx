@@ -11,8 +11,7 @@ import { getPublicConfig } from "@/lib/public-config"
 
 export default async function AdminCandidatos({ searchParams }: { searchParams: Promise<CandFiltro & { ok?: string }> }) {
   const sp = await searchParams
-  await requireRole("admin")
-  const [rows, { areas }] = await Promise.all([buscarCandidatos(sp, 300), getPublicConfig()])
+  const [, rows, { areas }] = await Promise.all([requireRole("admin"), buscarCandidatos(sp, 300), getPublicConfig()])
   const filtros = new URLSearchParams(
     Object.entries({ q: sp.q, area: sp.area, bairro: sp.bairro, status: sp.status, nota: sp.nota, pretensao: sp.pretensao }).filter(([, v]) => v) as [string, string][]
   )

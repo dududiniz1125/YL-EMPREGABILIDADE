@@ -21,3 +21,6 @@ export type Vaga = {
 export async function db() {
   return getServerSupabase()
 }
+
+/** Colunas de vaga usadas nas telas (evita select *) */
+export const VAGA_COLS = "id, titulo, area, quantidade, bairro, salario, entrevista_em, descricao, status, created_at, empresa_id"

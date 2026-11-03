@@ -7,8 +7,7 @@ import { getPublicConfig } from "@/lib/public-config"
 
 export default async function NovaVagaPage({ searchParams }: { searchParams: Promise<{ erro?: string }> }) {
   const sp = await searchParams
-  await requireRole("empresa")
-  const { areas } = await getPublicConfig()
+  const [, { areas }] = await Promise.all([requireRole("empresa"), getPublicConfig()])
   return (
     <>
       {sp.erro && <Flash tone="error">Preencha o título e a área da vaga.</Flash>}

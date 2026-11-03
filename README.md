@@ -29,6 +29,7 @@ Sem as variáveis do Supabase, o site público funciona normalmente e as áreas 
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave pública (anon). A integração da Vercel também pode criar `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, que o código aceita |
 | `SUPABASE_SERVICE_ROLE_KEY` | **Só servidor.** Usada para excluir contas (LGPD) e pelo seed do admin. Nunca vai para o navegador |
 | `ADMIN_EMAIL`, `ADMIN_PASSWORD` | **Só no `.env.local`**, para o `npm run seed:admin`. Nunca no código, em commit ou na Vercel |
+| `SUPABASE_JWT_SECRET` | Criada pela integração da Vercel. Deixa o `proxy.ts` validar o login localmente, sem ir ao Supabase a cada clique (projetos com chaves assimétricas nem precisam dela) |
 | `CRON_SECRET` (opcional) | Protege a rota `/api/keepalive` chamada pelo Cron da Vercel |
 
 O `.env.local` está no `.gitignore`.
@@ -36,7 +37,7 @@ O `.env.local` está no `.gitignore`.
 ## 3. Colocar o Supabase no ar (passo a passo)
 
 1. **Criar o banco pela Vercel:** projeto na Vercel → **Storage** → **Create** → **Supabase**. Conecte ao projeto `yl-empregabilidade`. As variáveis `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `SUPABASE_SERVICE_ROLE_KEY` são criadas sozinhas no projeto.
-2. **Criar as tabelas:** no painel do Supabase → **SQL Editor**, rode, em ordem, os arquivos de `supabase/migrations/` (`…0100_schema.sql`, `…0200_functions_triggers.sql`, `…0300_rls.sql`). Com o Supabase CLI: `supabase link --project-ref <ref>` e `supabase db push`.
+2. **Criar as tabelas:** no painel do Supabase → **SQL Editor**, rode, em ordem, os arquivos de `supabase/migrations/` (`…0100_schema.sql`, `…0200_functions_triggers.sql`, `…0300_rls.sql`, `…0400_role_no_token.sql`). Com o Supabase CLI: `supabase link --project-ref <ref>` e `supabase db push`.
 3. **Autenticação** (Supabase → **Authentication**):
    - **URL Configuration** → *Site URL*: `https://yl-empregabilidade.vercel.app`. *Redirect URLs*: `https://yl-empregabilidade.vercel.app/**` (depois, adicione também o domínio próprio: `https://ylempregabilidade.com.br/**`).
    - **Sign In / Providers → Email**: deixe **Confirm email** ligado.
@@ -72,6 +73,12 @@ No plano gratuito, o Supabase **pausa o projeto depois de cerca de uma semana se
 - Este projeto já tem um **Cron da Vercel** (`vercel.json`) que chama `/api/keepalive` uma vez por dia e faz uma consulta leve no banco. Isso costuma evitar a pausa.
 - A garantia mesmo é o **plano Pro** do Supabase, que não pausa e tem backup diário.
 - Se pausar: Supabase → projeto → **Restore project**.
+
+### Velocidade
+
+- As funções rodam em São Paulo (`"regions": ["gru1"]` no `vercel.json`), perto do banco (`sa-east-1`).
+- O `proxy.ts` valida o token localmente e lê o papel de dentro dele (`app_metadata.role`, preenchido pela migration `…0400`). A checagem completa (`getUser`) fica nas páginas e server actions, rodando em paralelo com as consultas.
+- `loading.tsx` em `/admin`, `/candidato` e `/empresa` mostra o esqueleto da tela na hora do clique.
 
 ## 4. Papéis
 

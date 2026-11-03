@@ -18,8 +18,11 @@ function F({ label, hint, children }: { label: string; hint?: string; children: 
 
 export default async function AdminConfig({ searchParams }: { searchParams: Promise<{ ok?: string; erro?: string }> }) {
   const sp = await searchParams
-  await requireRole("admin")
-  const { data: c } = await (await getServerSupabase()).from("configuracoes").select("*").eq("id", 1).single()
+  const supabase = await getServerSupabase()
+  const [, { data: c }] = await Promise.all([
+    requireRole("admin"),
+    supabase.from("configuracoes").select("areas, whatsapp, email, telefone, endereco, mostrar_numeros").eq("id", 1).single(),
+  ])
   if (!c) return null
   return (
     <>

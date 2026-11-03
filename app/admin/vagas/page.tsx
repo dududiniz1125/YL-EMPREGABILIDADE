@@ -11,14 +11,13 @@ import { getServerSupabase } from "@/lib/supabase/server"
 
 export default async function AdminVagas({ searchParams }: { searchParams: Promise<{ status?: string; empresa?: string; ok?: string; erro?: string }> }) {
   const sp = await searchParams
-  await requireRole("admin")
   let q = (await getServerSupabase())
     .from("vagas")
     .select("id, titulo, area, status, salario, bairro, created_at, empresa_id, empresas(nome, status), candidaturas(count)")
     .order("created_at", { ascending: false })
   if (sp.status) q = q.eq("status", sp.status)
   if (sp.empresa) q = q.eq("empresa_id", sp.empresa)
-  const { data } = await q
+  const [, { data }] = await Promise.all([requireRole("admin"), q])
   type Row = { id: string; titulo: string; area: string; status: string; salario: number | null; bairro: string | null; created_at: string; empresas: { nome: string; status: string } | null; candidaturas: { count: number }[] }
   const rows = (data ?? []) as unknown as Row[]
   const extra = sp.empresa ? `&empresa=${sp.empresa}` : ""

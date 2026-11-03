@@ -82,6 +82,7 @@ services:
     ports: ["54324:8025"]
   gateway:
     image: nginx:1.27-alpine
+    restart: unless-stopped
     depends_on: [auth, rest]
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro

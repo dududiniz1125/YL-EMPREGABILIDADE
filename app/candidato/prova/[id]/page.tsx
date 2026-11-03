@@ -7,9 +7,12 @@ import { getServerSupabase } from "@/lib/supabase/server"
 
 export default async function ProvaPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const s = await requireRole("candidato")
   const supabase = await getServerSupabase()
-  const { data: ja } = await supabase.from("respostas_prova").select("nota").eq("prova_id", id).eq("candidato_id", s.userId).maybeSingle()
+  const [, { data: ja }, { data }] = await Promise.all([
+    requireRole("candidato"),
+    supabase.from("respostas_prova").select("nota").eq("prova_id", id).maybeSingle(),
+    supabase.rpc("get_prova", { p_prova: id }),
+  ])
   if (ja) {
     return (
       <Card className="mx-auto max-w-lg text-center">
@@ -19,7 +22,6 @@ export default async function ProvaPage({ params }: { params: Promise<{ id: stri
       </Card>
     )
   }
-  const { data } = await supabase.rpc("get_prova", { p_prova: id })
   const rows = (data ?? []) as { prova_id: string; titulo: string; area: string; questao_id: string; enunciado: string; alternativas: string[] }[]
   if (!rows.length) notFound()
   return (

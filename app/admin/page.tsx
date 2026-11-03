@@ -47,8 +47,10 @@ async function carregarPainel() {
 
 export default async function AdminHome({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const sp = await searchParams
-  await requireRole("admin")
-  const { cands, empPend, vagasAbertas, candSemana, contratacoes, areasOrdenadas, semanas, max, empresasPend, vagasPend } = await carregarPainel()
+  const [, { cands, empPend, vagasAbertas, candSemana, contratacoes, areasOrdenadas, semanas, max, empresasPend, vagasPend }] = await Promise.all([
+    requireRole("admin"),
+    carregarPainel(),
+  ])
   const stats = [
     { label: "Candidatos cadastrados", value: count(cands), href: "/admin/candidatos/" },
     { label: "Empresas pendentes", value: count(empPend), href: "/admin/empresas/?status=pendente", alert: count(empPend) > 0 },

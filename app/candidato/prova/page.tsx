@@ -7,14 +7,15 @@ import { formatDate } from "@/lib/parse"
 import { getServerSupabase } from "@/lib/supabase/server"
 
 export default async function ProvasPage() {
-  const s = await requireRole("candidato")
   const supabase = await getServerSupabase()
-  const { data: c } = await supabase.from("candidatos").select("area_principal, outras_areas").eq("id", s.userId).single()
-  const minhasAreas = [c?.area_principal, ...(c?.outras_areas ?? [])].filter(Boolean) as string[]
-  const [{ data: provas }, { data: feitas }] = await Promise.all([
-    supabase.from("provas").select("id, titulo, area").eq("ativa", true).in("area", minhasAreas.length ? minhasAreas : ["-"]),
+  const [, { data: c }, { data: todas }, { data: feitas }] = await Promise.all([
+    requireRole("candidato"),
+    supabase.from("candidatos").select("area_principal, outras_areas").maybeSingle(),
+    supabase.from("provas").select("id, titulo, area").eq("ativa", true),
     supabase.from("respostas_prova").select("prova_id, nota, created_at"),
   ])
+  const minhasAreas = [c?.area_principal, ...(c?.outras_areas ?? [])].filter(Boolean) as string[]
+  const provas = (todas ?? []).filter((p) => minhasAreas.includes(p.area))
   const done = new Map((feitas ?? []).map((r) => [r.prova_id, r]))
 
   return (

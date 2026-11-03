@@ -14,10 +14,14 @@ import { cn } from "@/lib/utils"
 
 export default async function FichaCandidato({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ ok?: string; erro?: string }> }) {
   const [{ id }, sp] = await Promise.all([params, searchParams])
-  await requireRole("admin")
   const db = await getServerSupabase()
-  const [{ data: c }, { data: notas }, { data: provas }, { data: cands }] = await Promise.all([
-    db.from("candidatos").select("*").eq("id", id).maybeSingle(),
+  const [, { data: c }, { data: notas }, { data: provas }, { data: cands }] = await Promise.all([
+    requireRole("admin"),
+    db
+      .from("candidatos")
+      .select("id, nome, whatsapp, email, cidade, area_principal, outras_areas, pretensao_salarial, turnos, experiencias, status, created_at, consentimento_lgpd_em")
+      .eq("id", id)
+      .maybeSingle(),
     db.from("anotacoes").select("id, texto, created_at, profiles(nome)").eq("candidato_id", id).order("created_at", { ascending: false }),
     db.from("respostas_prova").select("nota, acertos, total, created_at, provas(area, titulo)").eq("candidato_id", id),
     db.from("candidaturas").select("id, status, created_at, indicada_por_admin, vagas(id, titulo, empresas(nome))").eq("candidato_id", id).order("created_at", { ascending: false }),

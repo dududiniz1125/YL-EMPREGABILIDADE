@@ -12,10 +12,12 @@ import { getServerSupabase } from "@/lib/supabase/server"
 
 export default async function AdminEmpresas({ searchParams }: { searchParams: Promise<{ status?: string; ok?: string }> }) {
   const sp = await searchParams
-  await requireRole("admin")
-  let q = (await getServerSupabase()).from("empresas").select("*, vagas(count)").order("created_at", { ascending: false })
+  let q = (await getServerSupabase())
+    .from("empresas")
+    .select("id, nome, cnpj, responsavel, whatsapp, email, bairro, status, created_at, vagas(count)")
+    .order("created_at", { ascending: false })
   if (sp.status) q = q.eq("status", sp.status)
-  const { data } = await q
+  const [, { data }] = await Promise.all([requireRole("admin"), q])
   type Row = { id: string; nome: string; cnpj: string | null; responsavel: string; whatsapp: string; email: string; bairro: string | null; status: string; created_at: string; vagas: { count: number }[] }
   const rows = (data ?? []) as unknown as Row[]
   const back = `/admin/empresas/${sp.status ? `?status=${sp.status}` : ""}`

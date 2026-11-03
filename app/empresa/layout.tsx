@@ -14,9 +14,12 @@ const nav: NavItem[] = [
 ]
 
 export default async function EmpresaLayout({ children }: { children: React.ReactNode }) {
-  const s = await requireRole("empresa")
   const supabase = await getServerSupabase()
-  const { data: emp } = await supabase.from("empresas").select("nome, status").eq("id", s.userId).single()
+  // RLS: a empresa só enxerga a própria linha
+  const [s, { data: emp }] = await Promise.all([
+    requireRole("empresa"),
+    supabase.from("empresas").select("nome, status").maybeSingle(),
+  ])
   const banner =
     emp?.status === "pendente" ? (
       <div role="status" className="bg-amber-soft text-ink border-amber/40 flex items-start gap-3 border-b px-4 py-3 sm:px-10">
