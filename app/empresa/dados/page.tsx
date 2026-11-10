@@ -21,13 +21,13 @@ export default async function DadosEmpresaPage({ searchParams }: { searchParams:
   const supabase = await getServerSupabase()
   const [, { data: e }] = await Promise.all([
     requireRole("empresa"),
-    supabase.from("empresas").select("nome, cnpj, responsavel, whatsapp, email, bairro, status").maybeSingle(),
+    supabase.from("empresas").select("nome, cnpj, responsavel, email, bairro, status").maybeSingle(),
   ])
   if (!e) return null
   return (
     <>
       {sp.ok && <Flash>Dados atualizados.</Flash>}
-      {sp.erro && <Flash tone="error">Confira nome da empresa, responsável e WhatsApp.</Flash>}
+      {sp.erro && <Flash tone="error">Confira o nome da empresa e do responsável.</Flash>}
       <PageHeader title="Dados da empresa" description={<span className="inline-flex items-center gap-2">Situação do cadastro: <StatusBadge status={e.status} /></span>} />
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <Card>
@@ -41,9 +41,6 @@ export default async function DadosEmpresaPage({ searchParams }: { searchParams:
               </F>
               <F label="Responsável">
                 <input name="responsavel" required defaultValue={e.responsavel} className={inputClass} />
-              </F>
-              <F label="WhatsApp">
-                <input name="whatsapp" required type="tel" inputMode="tel" defaultValue={e.whatsapp} className={inputClass} />
               </F>
               <F label="E-mail de acesso">
                 <input value={e.email} readOnly disabled className={inputClass} />

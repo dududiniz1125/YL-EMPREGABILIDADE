@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { MessageCircle } from "lucide-react"
+import { Mail } from "lucide-react"
 
 import { PageHeader } from "@/components/app/app-shell"
 import { ConfirmSubmit, SubmitButton } from "@/components/app/confirm-submit"
@@ -8,7 +8,8 @@ import { inputClass } from "@/components/forms/fields"
 import { addAnotacao, excluirCandidato, setCandidatoStatus } from "@/app/admin/actions"
 import { requireRole } from "@/lib/auth"
 import type { Experiencia } from "@/lib/data"
-import { formatBRL, formatDate, formatDateTime, onlyDigitsPhone } from "@/lib/parse"
+import { formatBRL, formatDate, formatDateTime } from "@/lib/parse"
+import { mailtoHref } from "@/lib/site-config"
 import { getServerSupabase } from "@/lib/supabase/server"
 import { cn } from "@/lib/utils"
 
@@ -19,7 +20,7 @@ export default async function FichaCandidato({ params, searchParams }: { params:
     requireRole("admin"),
     db
       .from("candidatos")
-      .select("id, nome, whatsapp, email, cidade, area_principal, outras_areas, pretensao_salarial, turnos, experiencias, status, created_at, consentimento_lgpd_em")
+      .select("id, nome, email, cidade, area_principal, outras_areas, pretensao_salarial, turnos, experiencias, status, created_at, consentimento_lgpd_em")
       .eq("id", id)
       .maybeSingle(),
     db.from("anotacoes").select("id, texto, created_at, profiles(nome)").eq("candidato_id", id).order("created_at", { ascending: false }),
@@ -29,7 +30,7 @@ export default async function FichaCandidato({ params, searchParams }: { params:
   if (!c) notFound()
   const exps = (c.experiencias ?? []) as Experiencia[]
   const primeiro = c.nome.split(" ")[0]
-  const wa = `https://wa.me/${onlyDigitsPhone(c.whatsapp)}?text=${encodeURIComponent(`Olá, ${primeiro}! Aqui é da YL Empregabilidade. Tudo bem?`)}`
+  const mail = mailtoHref(c.email, "YL Empregabilidade: sobre o seu cadastro", `Olá, ${primeiro}!\n\n`)
   type Prova = { nota: number; acertos: number; total: number; created_at: string; provas: { area: string; titulo: string } | null }
   type Cand = { id: string; status: string; created_at: string; indicada_por_admin: boolean; vagas: { id: string; titulo: string; empresas: { nome: string } | null } | null }
   type Nota = { id: number; texto: string; created_at: string; profiles: { nome: string } | null }
@@ -47,8 +48,8 @@ export default async function FichaCandidato({ params, searchParams }: { params:
         }
         actions={
           <>
-            <a href={wa} target="_blank" rel="noopener noreferrer" className="bg-sprout-deep inline-flex min-h-11 items-center gap-2 rounded-full px-5 font-semibold text-white">
-              <MessageCircle className="size-4" aria-hidden /> Chamar no WhatsApp
+            <a href={mail} className="bg-sprout-deep inline-flex min-h-11 items-center gap-2 rounded-full px-5 font-semibold text-white">
+              <Mail className="size-4" aria-hidden /> Enviar e-mail
             </a>
             <ButtonLink href="/admin/candidatos/" tone="outline">← Lista</ButtonLink>
           </>
@@ -61,7 +62,6 @@ export default async function FichaCandidato({ params, searchParams }: { params:
             <h2 className="text-ink mb-4 text-xl font-semibold">Ficha</h2>
             <Dl
               items={[
-                ["WhatsApp", c.whatsapp],
                 ["E-mail", c.email],
                 ["Cidade/bairro", c.cidade],
                 ["Área principal", c.area_principal],
@@ -146,7 +146,7 @@ export default async function FichaCandidato({ params, searchParams }: { params:
             <form action={addAnotacao} className="mt-3 space-y-2">
               <input type="hidden" name="id" value={c.id} />
               <label htmlFor="texto" className="sr-only">Nova anotação</label>
-              <textarea id="texto" name="texto" rows={3} required maxLength={2000} placeholder="Ex.: Conversamos por WhatsApp, prefere turno noite." className={`${inputClass} h-auto py-3`} />
+              <textarea id="texto" name="texto" rows={3} required maxLength={2000} placeholder="Ex.: Respondeu o e-mail, prefere turno noite." className={`${inputClass} h-auto py-3`} />
               <SubmitButton tone="admin">Salvar anotação</SubmitButton>
             </form>
             <ul className="mt-4 space-y-3">

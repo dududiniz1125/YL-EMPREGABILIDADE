@@ -39,8 +39,3 @@ export function isoToBrt(iso: string | null | undefined) {
   const d = new Date(new Date(iso).getTime() - 3 * 3600_000)
   return { date: d.toISOString().slice(0, 10), time: d.toISOString().slice(11, 16) }
 }
-
-export function onlyDigitsPhone(v: string) {
-  const d = v.replace(/\D/g, "")
-  return d.startsWith("55") ? d : `55${d}`
-}

@@ -17,7 +17,6 @@ export function candidatoMeta(over: Record<string, unknown> = {}) {
   return {
     role: "candidato",
     nome: "Candidato Teste",
-    whatsapp: "(11) 98888-7777",
     cidade: "São Paulo, Lapa",
     area_principal: "Cumim",
     outras_areas: [],
@@ -34,7 +33,6 @@ export function empresaMeta(over: Record<string, unknown> = {}) {
     role: "empresa",
     empresa: "Restaurante Teste",
     responsavel: "Responsável Teste",
-    whatsapp: "(11) 3333-4444",
     bairro: "Pinheiros",
     cnpj: "",
     consentimento: true,

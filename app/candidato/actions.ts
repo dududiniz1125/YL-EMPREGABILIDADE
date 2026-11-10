@@ -32,10 +32,9 @@ export async function salvarPerfil(formData: FormData) {
     }))
     .filter((e) => e.empresa || e.funcao || e.tempo)
   const nome = str(formData, "nome")
-  const whatsapp = str(formData, "whatsapp")
   const cidade = str(formData, "cidade")
   const area = str(formData, "area_principal")
-  if (nome.length < 3 || whatsapp.replace(/\D/g, "").length < 10 || cidade.length < 2 || !area) {
+  if (nome.length < 3 || cidade.length < 2 || !area) {
     redirect("/candidato/perfil/?erro=dados")
   }
   const supabase = await getServerSupabase()
@@ -44,7 +43,6 @@ export async function salvarPerfil(formData: FormData) {
     .from("candidatos")
     .update({
       nome,
-      whatsapp,
       cidade,
       area_principal: area,
       outras_areas: formData.getAll("outras_areas").map(String).filter((a) => a !== area),

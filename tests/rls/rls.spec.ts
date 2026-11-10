@@ -29,7 +29,7 @@ test.describe("RLS", () => {
 
   test.beforeAll(async () => {
     candA = await createUser(candidatoMeta({ nome: "Ana A" }), "candA")
-    candB = await createUser(candidatoMeta({ nome: "Bruno B", whatsapp: "(11) 97777-6666" }), "candB")
+    candB = await createUser(candidatoMeta({ nome: "Bruno B" }), "candB")
     empX = await createUser(empresaMeta({ empresa: "Empresa X" }), "empX")
     empY = await createUser(empresaMeta({ empresa: "Empresa Y" }), "empY")
     await adminDb().from("empresas").update({ status: "aprovada" }).in("id", [empX.id, empY.id])
@@ -44,6 +44,13 @@ test.describe("RLS", () => {
     expect(data?.nome).toBe("Ana A")
     expect(data?.status).toBe("ativo")
     expect(data?.consentimento_lgpd_em).toBeTruthy()
+  })
+
+  test("banco não guarda mais WhatsApp (contato só por e-mail)", async () => {
+    for (const t of ["candidatos", "empresas", "configuracoes"]) {
+      const { error } = await adminDb().from(t).select("whatsapp").limit(1)
+      expect(error, t).toBeTruthy()
+    }
   })
 
   test("candidato não lê nem edita o cadastro de outro candidato", async () => {
@@ -112,14 +119,15 @@ test.describe("RLS", () => {
     expect(data).toHaveLength(0)
   })
 
-  test("empresa só vê inscritos das próprias vagas, sem WhatsApp antes da entrevista", async () => {
+  test("empresa só vê inscritos das próprias vagas, sem e-mail antes da entrevista", async () => {
     const x = await signIn(empX.email)
     const { data } = await x.from("inscritos_empresa").select("*")
     expect(data).toHaveLength(1)
     expect(data![0].vaga_id).toBe(vagaX)
     expect(data![0].nome).toBe("Ana Alterada")
-    expect(data![0].whatsapp).toBeNull()
-    expect(Object.keys(data![0])).not.toContain("email")
+    expect(data![0].email).toBeNull()
+    expect(Object.keys(data![0])).not.toContain("whatsapp")
+    expect(Object.keys(data![0])).not.toContain("cidade")
 
     const { data: cands } = await x.from("candidaturas").select("vaga_id")
     expect(cands?.every((c) => c.vaga_id === vagaX)).toBe(true)
@@ -130,7 +138,7 @@ test.describe("RLS", () => {
     expect(dy![0].vaga_id).toBe(vagaY)
   })
 
-  test("empresa vê o WhatsApp só a partir da entrevista e não mexe em candidatura alheia", async () => {
+  test("empresa vê o e-mail só a partir da entrevista e não mexe em candidatura alheia", async () => {
     const x = await signIn(empX.email)
     const { data: rows } = await x.from("inscritos_empresa").select("candidatura_id")
     const minha = rows![0].candidatura_id as string
@@ -140,13 +148,13 @@ test.describe("RLS", () => {
     expect(foreign.error).toBeTruthy()
 
     expect((await x.rpc("empresa_mudar_status", { p_candidatura: minha, p_status: "em_analise" })).error).toBeNull()
-    let { data } = await x.from("inscritos_empresa").select("whatsapp, status").eq("candidatura_id", minha).single()
-    expect(data?.whatsapp).toBeNull()
+    let { data } = await x.from("inscritos_empresa").select("email, status").eq("candidatura_id", minha).single()
+    expect(data?.email).toBeNull()
 
     expect((await x.rpc("empresa_mudar_status", { p_candidatura: minha, p_status: "entrevista" })).error).toBeNull()
-    ;({ data } = await x.from("inscritos_empresa").select("whatsapp, status").eq("candidatura_id", minha).single())
+    ;({ data } = await x.from("inscritos_empresa").select("email, status").eq("candidatura_id", minha).single())
     expect(data?.status).toBe("entrevista")
-    expect(data?.whatsapp).toBe("(11) 98888-7777")
+    expect(data?.email).toBe(candA.email.toLowerCase())
 
     // linha do tempo registrada
     const a = await signIn(candA.email)
@@ -223,9 +231,9 @@ test.describe("RLS", () => {
     }
     const { data: cfg } = await anon.from("configuracoes").select("areas").single()
     expect(cfg?.areas.length).toBeGreaterThan(0)
-    const { error } = await anon.from("configuracoes").update({ whatsapp: "x" }).eq("id", 1)
-    const { data: after } = await adminDb().from("configuracoes").select("whatsapp").single()
-    expect(error || after?.whatsapp !== "x").toBeTruthy()
+    const { error } = await anon.from("configuracoes").update({ telefone: "x" }).eq("id", 1)
+    const { data: after } = await adminDb().from("configuracoes").select("telefone").single()
+    expect(error || after?.telefone !== "x").toBeTruthy()
   })
 
   test("admin vê e edita tudo", async () => {

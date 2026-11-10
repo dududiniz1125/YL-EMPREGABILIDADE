@@ -38,8 +38,8 @@ const candidato: Step[] = [
   },
   {
     icon: MessageCircle,
-    title: "Receba o contato pelo WhatsApp",
-    text: "Quando surgir uma vaga compatível com o seu perfil, a gente chama você pelo WhatsApp.",
+    title: "Receba o contato por e-mail",
+    text: "Quando surgir uma vaga compatível com o seu perfil, a gente avisa você por e-mail.",
   },
 ]
 

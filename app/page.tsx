@@ -1,6 +1,5 @@
 import { Footer } from "@/components/site/footer"
 import { Navbar } from "@/components/site/navbar"
-import { WhatsappFloat } from "@/components/site/whatsapp-float"
 import { AreasMarquee } from "@/components/sections/areas-marquee"
 import { Candidatos } from "@/components/sections/candidatos"
 import { ComoFunciona } from "@/components/sections/como-funciona"
@@ -32,7 +31,6 @@ export default function Home() {
         <CtaFinal />
       </main>
       <Footer />
-      <WhatsappFloat />
     </>
   )
 }

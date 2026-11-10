@@ -21,7 +21,7 @@ export default async function AdminConfig({ searchParams }: { searchParams: Prom
   const supabase = await getServerSupabase()
   const [, { data: c }] = await Promise.all([
     requireRole("admin"),
-    supabase.from("configuracoes").select("areas, whatsapp, email, telefone, endereco, mostrar_numeros").eq("id", 1).single(),
+    supabase.from("configuracoes").select("areas, email, telefone, endereco, mostrar_numeros").eq("id", 1).single(),
   ])
   if (!c) return null
   return (
@@ -35,9 +35,6 @@ export default async function AdminConfig({ searchParams }: { searchParams: Prom
             <textarea name="areas" rows={8} defaultValue={(c.areas as string[]).join("\n")} className={`${inputClass} h-auto py-3`} />
           </F>
           <div className="grid gap-5 sm:grid-cols-2">
-            <F label="WhatsApp da YL" hint="Só números, com DDI e DDD (ex.: 5511999999999). Vazio esconde o botão flutuante.">
-              <input name="whatsapp" inputMode="numeric" defaultValue={c.whatsapp} className={inputClass} />
-            </F>
             <F label="E-mail de contato">
               <input name="email" type="email" defaultValue={c.email} className={inputClass} />
             </F>

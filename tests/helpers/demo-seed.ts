@@ -40,7 +40,7 @@ export async function seedDemo() {
   ]
   const cands = []
   for (const [nome, area] of nomes) {
-    cands.push(await createUser(candidatoMeta({ nome, area_principal: area, whatsapp: "(11) 90000-0000" }), "demo.cand"))
+    cands.push(await createUser(candidatoMeta({ nome, area_principal: area }), "demo.cand"))
   }
   const garcom = vagas!.find((v) => v.area === "Garçom / Garçonete")!.id
   const cumim = vagas!.find((v) => v.area === "Cumim")!.id

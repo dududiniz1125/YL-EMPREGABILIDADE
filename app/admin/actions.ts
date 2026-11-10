@@ -196,7 +196,6 @@ export async function salvarConfig(f: FormData) {
     .from("configuracoes")
     .update({
       areas: Array.from(new Set(areas)),
-      whatsapp: str(f, "whatsapp").replace(/\D/g, ""),
       email: str(f, "email"),
       telefone: str(f, "telefone"),
       endereco: str(f, "endereco"),

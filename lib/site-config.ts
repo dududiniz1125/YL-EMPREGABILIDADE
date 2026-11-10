@@ -14,8 +14,6 @@ export const siteConfig = {
 
   // Contato
   email: "ylempregabilidade@gmail.com",
-  whatsapp: "" as string, // só números com DDI+DDD, ex.: "5511999999999" (vazio = esconde o botão flutuante)
-  whatsappMessage: "Olá! Vim pelo site da YL Empregabilidade e gostaria de mais informações.",
   phone: "" as string, // ex.: "(11) 99999-9999" — vazio = não aparece
   address: "" as string, // vazio = não aparece
   city: "São Paulo, SP",
@@ -42,7 +40,7 @@ export const siteConfig = {
   // Mensagens de sucesso dos formulários
   messages: {
     candidatoSucesso:
-      "Recebemos seu cadastro! Em breve você recebe o link da provinha pelo WhatsApp.",
+      "Recebemos seu cadastro! Confirme seu e-mail, entre na sua área e faça a provinha.",
     empresaSucesso:
       "Recebemos sua vaga! Nossa equipe vai entrar em contato para confirmar os detalhes.",
   },
@@ -70,7 +68,8 @@ export const siteConfig = {
 
 export type SiteConfig = typeof siteConfig
 
-export function whatsappLink(message: string = siteConfig.whatsappMessage) {
-  if (!siteConfig.whatsapp) return null
-  return `https://wa.me/${siteConfig.whatsapp}?text=${encodeURIComponent(message)}`
+/** Link de e-mail com assunto (e corpo opcional) já preenchidos. */
+export function mailtoHref(to: string, subject: string, body?: string) {
+  const q = new URLSearchParams({ subject, ...(body ? { body } : {}) })
+  return `mailto:${to}?${q.toString().replace(/\+/g, "%20")}`
 }

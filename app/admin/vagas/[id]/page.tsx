@@ -25,7 +25,7 @@ export default async function AdminVaga({ params, searchParams }: { params: Prom
   const [, { data: vaga }, { data: inscritos }, { areas }] = await Promise.all([
     requireRole("admin"),
     db.from("vagas").select(`${VAGA_COLS}, empresas(nome, status)`).eq("id", id).maybeSingle(),
-    db.from("candidaturas").select("id, status, indicada_por_admin, created_at, candidatos(id, nome, area_principal, whatsapp)").eq("vaga_id", id).order("created_at"),
+    db.from("candidaturas").select("id, status, indicada_por_admin, created_at, candidatos(id, nome, area_principal)").eq("vaga_id", id).order("created_at"),
     getPublicConfig(),
   ])
   if (!vaga) notFound()
@@ -33,7 +33,7 @@ export default async function AdminVaga({ params, searchParams }: { params: Prom
   const { data: sugestoes } = sp.busca
     ? await db.from("candidatos").select("id, nome, area_principal, cidade").ilike("nome", `%${sp.busca.replace(/[%_,()]/g, "")}%`).limit(8)
     : await db.from("candidatos").select("id, nome, area_principal, cidade").eq("area_principal", v.area).eq("status", "ativo").limit(8)
-  type Insc = { id: string; status: string; indicada_por_admin: boolean; candidatos: { id: string; nome: string; area_principal: string; whatsapp: string } | null }
+  type Insc = { id: string; status: string; indicada_por_admin: boolean; candidatos: { id: string; nome: string; area_principal: string } | null }
   const lista = (inscritos ?? []) as unknown as Insc[]
   const jaInscritos = new Set(lista.map((i) => i.candidatos?.id))
   const back = `/admin/vagas/${id}/`

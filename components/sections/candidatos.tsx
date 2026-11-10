@@ -8,7 +8,7 @@ import { SectionHeading } from "@/components/site/section-heading"
 const perks = [
   "Cadastro gratuito e rápido",
   "Provinha online da sua área",
-  "Aviso de vagas compatíveis pelo WhatsApp",
+  "Aviso de vagas compatíveis por e-mail",
 ]
 
 export function Candidatos() {
@@ -48,7 +48,7 @@ export function Candidatos() {
             <h3 className="text-ink text-2xl font-semibold sm:text-3xl">Crie sua conta em 3 passos</h3>
             <ol className="mt-6 space-y-4">
               {[
-                ["Dados e contato", "Nome, WhatsApp, e-mail e a área em que quer trabalhar."],
+                ["Dados e contato", "Nome, e-mail, cidade e a área em que quer trabalhar."],
                 ["Experiência e pretensão", "Até 3 empregos anteriores, salário desejado e turnos."],
                 ["Senha", "Crie sua senha para acompanhar tudo na sua área."],
               ].map(([t, d], i) => (

@@ -28,7 +28,7 @@ export default async function PerfilPage({ searchParams }: { searchParams: Promi
     requireRole("candidato"),
     supabase
       .from("candidatos")
-      .select("nome, whatsapp, email, cidade, area_principal, outras_areas, pretensao_salarial, turnos, experiencias")
+      .select("nome, email, cidade, area_principal, outras_areas, pretensao_salarial, turnos, experiencias")
       .maybeSingle(),
     getPublicConfig(),
   ])
@@ -39,7 +39,7 @@ export default async function PerfilPage({ searchParams }: { searchParams: Promi
   return (
     <>
       {sp.ok === "perfil" && <Flash>Perfil atualizado.</Flash>}
-      {sp.erro === "dados" && <Flash tone="error">Confira nome, WhatsApp, cidade e área: são obrigatórios.</Flash>}
+      {sp.erro === "dados" && <Flash tone="error">Confira nome, cidade e área: são obrigatórios.</Flash>}
       {sp.erro && sp.erro !== "dados" && <Flash tone="error">Não foi possível salvar agora. Tente de novo.</Flash>}
       <PageHeader title="Meu perfil" description="Mantenha seus dados em dia: é assim que as vagas certas chegam até você." />
 
@@ -50,10 +50,7 @@ export default async function PerfilPage({ searchParams }: { searchParams: Promi
             <Field label="Nome completo">
               <input name="nome" required defaultValue={c.nome} autoComplete="name" className={inputClass} />
             </Field>
-            <Field label="WhatsApp">
-              <input name="whatsapp" required type="tel" inputMode="tel" defaultValue={c.whatsapp} className={inputClass} />
-            </Field>
-            <Field label="E-mail" hint="O e-mail de acesso não pode ser alterado por aqui.">
+            <Field label="E-mail" hint="É por aqui que falamos com você. Para trocar, escreva para a YL.">
               <input value={c.email} readOnly disabled className={inputClass} />
             </Field>
             <Field label="Cidade / bairro">

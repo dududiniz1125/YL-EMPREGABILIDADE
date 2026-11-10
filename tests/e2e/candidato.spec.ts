@@ -18,8 +18,6 @@ test("candidato: cadastro completo → confirmação → login → candidatura �
   await page.getByRole("button", { name: "Continuar" }).click()
   await expect(page.getByText("Informe seu nome completo.")).toBeVisible()
   await page.getByLabel("Nome completo").fill("Joana Teste")
-  await page.getByLabel("WhatsApp").pressSequentially("11987654321")
-  await expect(page.getByLabel("WhatsApp")).toHaveValue("(11) 98765-4321")
   await page.getByLabel("E-mail").fill(email)
   await page.getByLabel("Cidade / bairro").fill("São Paulo, Lapa")
   await page.getByLabel("Área principal").selectOption("Cumim")

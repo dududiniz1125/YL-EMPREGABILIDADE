@@ -17,11 +17,10 @@ export async function GET(request: NextRequest) {
   if (!s || s.role !== "admin") return NextResponse.redirect(new URL("/entrar/?erro=sem-permissao", request.url))
   const sp = Object.fromEntries(request.nextUrl.searchParams)
   const rows = await buscarCandidatos(sp, 10000)
-  const header = ["Nome", "WhatsApp", "E-mail", "Cidade/bairro", "Área principal", "Outras áreas", "Pretensão", "Turnos", "Experiências", "Nota", "Status", "Cadastro"]
+  const header = ["Nome", "E-mail", "Cidade/bairro", "Área principal", "Outras áreas", "Pretensão", "Turnos", "Experiências", "Nota", "Status", "Cadastro"]
   const lines = rows.map((c) =>
     [
       c.nome,
-      c.whatsapp,
       c.email,
       c.cidade,
       c.area_principal,

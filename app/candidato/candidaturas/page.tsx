@@ -81,7 +81,7 @@ export default async function CandidaturasPage() {
                   )}
                   {c.status === "entrevista" && c.vagas?.entrevista_em && (
                     <p className="bg-seed-soft text-seed-deep mt-4 rounded-xl px-4 py-3 text-sm font-medium">
-                      Entrevista: {formatDateTime(c.vagas.entrevista_em)}. A empresa ou a YL vai falar com você pelo WhatsApp.
+                      Entrevista: {formatDateTime(c.vagas.entrevista_em)}. A empresa ou a YL vai falar com você por e-mail.
                     </p>
                   )}
                 </Card>

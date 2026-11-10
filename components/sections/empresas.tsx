@@ -49,7 +49,7 @@ export function Empresas() {
               {[
                 ["Crie a conta da empresa", "Dados da empresa, do responsável e uma senha."],
                 ["Publique suas vagas", "Função, salário, local e data/horário da entrevista."],
-                ["Receba os inscritos", "Candidatos com nota da provinha e experiências. O WhatsApp libera na etapa de entrevista."],
+                ["Receba os inscritos", "Candidatos com nota da provinha e experiências. O e-mail do candidato libera na etapa de entrevista."],
               ].map(([t, d], i) => (
                 <li key={t} className="flex gap-4">
                   <span className="bg-seed font-display flex size-10 shrink-0 items-center justify-center rounded-full text-lg font-semibold text-white">

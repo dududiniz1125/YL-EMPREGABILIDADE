@@ -8,7 +8,6 @@ import { isSupabaseConfigured, SUPABASE_ANON_KEY, SUPABASE_URL } from "@/lib/sup
 
 export type PublicConfig = {
   areas: string[]
-  whatsapp: string
   email: string
   phone: string
   address: string
@@ -17,7 +16,6 @@ export type PublicConfig = {
 
 const fallback: PublicConfig = {
   areas: [...siteConfig.areas],
-  whatsapp: siteConfig.whatsapp,
   email: siteConfig.email,
   phone: siteConfig.phone,
   address: siteConfig.address,
@@ -33,13 +31,12 @@ export const getPublicConfig = cache(async (): Promise<PublicConfig> => {
   try {
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false } })
     const [{ data: cfg }, { data: stats }] = await Promise.all([
-      db.from("configuracoes").select("areas, whatsapp, email, telefone, endereco").eq("id", 1).maybeSingle(),
+      db.from("configuracoes").select("areas, email, telefone, endereco").eq("id", 1).maybeSingle(),
       db.rpc("public_stats"),
     ])
     if (!cfg) return fallback
     return {
       areas: cfg.areas?.length ? cfg.areas : fallback.areas,
-      whatsapp: cfg.whatsapp ?? "",
       email: cfg.email || fallback.email,
       phone: cfg.telefone ?? "",
       address: cfg.endereco ?? "",
@@ -49,9 +46,3 @@ export const getPublicConfig = cache(async (): Promise<PublicConfig> => {
     return fallback
   }
 })
-
-export function whatsappHref(numero: string, message: string = siteConfig.whatsappMessage) {
-  const n = numero.replace(/\D/g, "")
-  if (!n) return null
-  return `https://wa.me/${n}?text=${encodeURIComponent(message)}`
-}

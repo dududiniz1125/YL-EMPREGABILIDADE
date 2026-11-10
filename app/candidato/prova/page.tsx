@@ -25,7 +25,7 @@ export default async function ProvasPage() {
         description="Um teste rápido de múltipla escolha. Cada prova é feita uma vez e a nota aparece para as empresas das vagas em que você se candidatar."
       />
       {!provas?.length ? (
-        <EmptyState title="Ainda não há prova para as suas áreas" text="Assim que a prova da sua área ficar pronta, ela aparece aqui e avisamos você pelo WhatsApp." />
+        <EmptyState title="Ainda não há prova para as suas áreas" text="Assim que a prova da sua área ficar pronta, ela aparece aqui e avisamos você por e-mail." />
       ) : (
         <ul className="grid gap-4 md:grid-cols-2">
           {provas.map((p) => {

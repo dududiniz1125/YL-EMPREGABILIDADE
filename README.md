@@ -1,6 +1,6 @@
 # YL Empregabilidade
 
-Site e plataforma de recolocação profissional: candidatos criam conta, fazem a provinha da área e se candidatam às vagas. Empresas publicam vagas e acompanham os inscritos. A equipe YL administra tudo pelo painel `/admin`.
+Site e plataforma de recolocação profissional (todo contato com candidatos e empresas é por e-mail; o site não usa WhatsApp): candidatos criam conta, fazem a provinha da área e se candidatam às vagas. Empresas publicam vagas e acompanham os inscritos. A equipe YL administra tudo pelo painel `/admin`.
 
 **Stack:** Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · shadcn/ui · Magic UI · Supabase (Auth + Postgres + RLS) via `@supabase/ssr` · Vercel.
 
@@ -37,7 +37,7 @@ O `.env.local` está no `.gitignore`.
 ## 3. Colocar o Supabase no ar (passo a passo)
 
 1. **Criar o banco pela Vercel:** projeto na Vercel → **Storage** → **Create** → **Supabase**. Conecte ao projeto `yl-empregabilidade`. As variáveis `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `SUPABASE_SERVICE_ROLE_KEY` são criadas sozinhas no projeto.
-2. **Criar as tabelas:** no painel do Supabase → **SQL Editor**, rode, em ordem, os arquivos de `supabase/migrations/` (`…0100_schema.sql`, `…0200_functions_triggers.sql`, `…0300_rls.sql`, `…0400_role_no_token.sql`). Com o Supabase CLI: `supabase link --project-ref <ref>` e `supabase db push`.
+2. **Criar as tabelas:** no painel do Supabase → **SQL Editor**, rode, em ordem, os arquivos de `supabase/migrations/` (`…0100_schema.sql`, `…0200_functions_triggers.sql`, `…0300_rls.sql`, `…0400_role_no_token.sql`, `…0500_remove_whatsapp.sql`). Com o Supabase CLI: `supabase link --project-ref <ref>` e `supabase db push`.
 3. **Autenticação** (Supabase → **Authentication**):
    - **URL Configuration** → *Site URL*: `https://yl-empregabilidade.vercel.app`. *Redirect URLs*: `https://yl-empregabilidade.vercel.app/**` (depois, adicione também o domínio próprio: `https://ylempregabilidade.com.br/**`).
    - **Sign In / Providers → Email**: deixe **Confirm email** ligado.
@@ -85,7 +85,7 @@ No plano gratuito, o Supabase **pausa o projeto depois de cerca de uma semana se
 | Papel | Área | O que pode |
 | --- | --- | --- |
 | `candidato` | `/candidato` | Ver e editar o próprio cadastro, fazer a provinha (uma vez por área), ver vagas **abertas**, se candidatar, acompanhar status, excluir a conta |
-| `empresa` | `/empresa` | Criar, editar e encerrar as **próprias** vagas (entram como pendentes), ver os inscritos das próprias vagas (nome, área, experiências, nota). O WhatsApp só aparece a partir da etapa **Entrevista** |
+| `empresa` | `/empresa` | Criar, editar e encerrar as **próprias** vagas (entram como pendentes), ver os inscritos das próprias vagas (nome, área, experiências, nota). O e-mail do candidato só aparece a partir da etapa **Entrevista** |
 | `admin` | `/admin` | Tudo: aprovar empresas e vagas, candidatos, candidaturas, provas, configurações do site, registro de ações |
 
 Quem garante isso é o banco (Row Level Security em todas as tabelas + função `is_admin()`). O site confere o papel no `proxy.ts`, em cada página e em cada server action. **Ninguém vira admin pelo site:** o papel `admin` só é dado pelo seed ou direto no banco.
@@ -97,7 +97,7 @@ Quem garante isso é o banco (Row Level Security em todas as tabelas + função 
 
 ## 5. Editar conteúdo
 
-- **Pelo painel** (`/admin/configuracoes`): áreas/funções (formulários, filtros e faixa de áreas do site), WhatsApp (botão flutuante), e-mail, telefone, endereço e a seção de números da landing (dados reais do banco).
+- **Pelo painel** (`/admin/configuracoes`): áreas/funções (formulários, filtros e faixa de áreas do site), e-mail, telefone, endereço e a seção de números da landing (dados reais do banco).
 - **No código:** textos das seções em `components/sections/*`; dados fixos (nome, CNPJ, cidade) em `lib/site-config.ts`; política em `app/privacidade/page.tsx`.
 - O Formspree recebe só um **aviso** por e-mail a cada cadastro (nome, área e cidade). Os dados ficam no Supabase.
 
@@ -126,8 +126,8 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3100
 Os e-mails de teste aparecem em http://localhost:54324 (Mailpit).
 
 O que é testado:
-- **RLS:** candidato não lê nem edita outro candidato; candidato só vê vagas abertas; empresa não lê a tabela de candidatos nem inscritos de outras empresas; WhatsApp só a partir da entrevista; empresa não aprova a própria vaga; prova sem gabarito para o candidato; visitante sem acesso; ninguém vira admin.
-- **E2E:** cadastro de candidato → confirmação → login → candidatura → status; empresa → admin aprova → vaga → admin aprova → candidato se inscreve → entrevista libera o WhatsApp; login do admin do seed + todas as telas + troca de senha; esqueci minha senha; acessos proibidos redirecionam para `/entrar`.
+- **RLS:** candidato não lê nem edita outro candidato; candidato só vê vagas abertas; empresa não lê a tabela de candidatos nem inscritos de outras empresas; e-mail do candidato só a partir da entrevista; o banco não tem mais colunas de WhatsApp; empresa não aprova a própria vaga; prova sem gabarito para o candidato; visitante sem acesso; ninguém vira admin.
+- **E2E:** cadastro de candidato → confirmação → login → candidatura → status; empresa → admin aprova → vaga → admin aprova → candidato se inscreve → entrevista libera o e-mail do candidato; login do admin do seed + todas as telas + troca de senha; esqueci minha senha; acessos proibidos redirecionam para `/entrar`.
 
 ## 7. Backup do banco
 

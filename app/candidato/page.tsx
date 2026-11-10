@@ -71,7 +71,7 @@ export default async function CandidatoHome({ searchParams }: { searchParams: Pr
               Faça sua prova <ArrowRight className="size-4" aria-hidden />
             </ButtonLink>
           )}
-          {!prova && <p className="text-ink-soft mt-3 text-sm">Avisamos pelo WhatsApp quando ela estiver disponível.</p>}
+          {!prova && <p className="text-ink-soft mt-3 text-sm">Avisamos por e-mail quando ela estiver disponível.</p>}
         </Card>
       </div>
 
@@ -98,7 +98,7 @@ export default async function CandidatoHome({ searchParams }: { searchParams: Pr
           ))
         ) : (
           <div className="md:col-span-2">
-            <EmptyState title="Nenhuma vaga aberta na sua área agora" text="Novas vagas chegam toda semana. Avisamos você pelo WhatsApp." />
+            <EmptyState title="Nenhuma vaga aberta na sua área agora" text="Novas vagas chegam toda semana. Avisamos você por e-mail." />
           </div>
         )}
       </div>

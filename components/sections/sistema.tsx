@@ -1,9 +1,8 @@
-import { BarChart3, ClipboardList, Headset, MessageCircle } from "lucide-react"
+import { BarChart3, BellRing, CalendarCheck, ClipboardCheck, ClipboardList, Headset, Mail, MailCheck } from "lucide-react"
 
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { BorderBeam } from "@/components/magicui/border-beam"
 import { SectionHeading } from "@/components/site/section-heading"
-import { WhatsappFeed } from "@/components/sections/whatsapp-feed"
 import { getPublicConfig } from "@/lib/public-config"
 import { cn } from "@/lib/utils"
 
@@ -76,19 +75,38 @@ export async function Sistema() {
             </Card>
           </BlurFade>
 
-          {/* WhatsApp — Digisac */}
+          {/* Avisos por e-mail */}
           <BlurFade inView delay={0.08} className="md:row-span-2">
             <Card>
-              <CardIcon icon={MessageCircle} className="bg-sprout-soft text-sprout-deep" />
-              <h3 className="text-ink mt-5 text-2xl font-semibold">Comunicação pelo WhatsApp</h3>
+              <CardIcon icon={Mail} className="bg-sprout-soft text-sprout-deep" />
+              <h3 className="text-ink mt-5 text-2xl font-semibold">Avisos por e-mail</h3>
               <p className="text-ink-soft mt-2 leading-relaxed">
-                Pelo Digisac, avisamos candidatos e empresas sobre vagas, entrevistas e próximos passos,
-                direto no WhatsApp.
+                Cada etapa importante chega no seu e-mail, e tudo também fica registrado na sua área da plataforma.
               </p>
-              <div className="mt-6 flex-1">
-                <WhatsappFeed />
-              </div>
-              <p className="text-ink-soft mt-2 text-xs italic">Mensagens ilustrativas.</p>
+              <ul className="mt-6 space-y-3">
+                {[
+                  [MailCheck, "Confirmação do cadastro"],
+                  [ClipboardCheck, "Provinha liberada na sua área"],
+                  [BellRing, "Vaga compatível com o seu perfil"],
+                  [CalendarCheck, "Convite para entrevista"],
+                ].map(([Icon, label]) => {
+                  const I = Icon as typeof Mail
+                  return (
+                    <li
+                      key={label as string}
+                      className="border-line/80 flex items-center gap-3 rounded-2xl border bg-white p-3 shadow-[var(--shadow-soft)]"
+                    >
+                      <span className="bg-sprout-soft text-sprout-deep flex size-9 shrink-0 items-center justify-center rounded-xl">
+                        <I className="size-4.5" strokeWidth={2} aria-hidden />
+                      </span>
+                      <span className="text-ink text-sm font-semibold">{label as string}</span>
+                    </li>
+                  )
+                })}
+              </ul>
+              <p className="text-ink-soft mt-auto pt-6 text-sm">
+                Dúvidas? Nossa equipe responde por e-mail, de pessoa para pessoa.
+              </p>
             </Card>
           </BlurFade>
 

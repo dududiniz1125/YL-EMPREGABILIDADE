@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { MessageCircle } from "lucide-react"
+import { Mail } from "lucide-react"
 
 import { PageHeader } from "@/components/app/app-shell"
 import { ConfirmSubmit } from "@/components/app/confirm-submit"
@@ -8,7 +8,7 @@ import { VagaForm } from "@/components/app/vaga-form"
 import { editarVaga, encerrarVaga, mudarStatusInscrito } from "@/app/empresa/actions"
 import { requireRole } from "@/lib/auth"
 import { VAGA_COLS, type Experiencia, type Vaga } from "@/lib/data"
-import { onlyDigitsPhone } from "@/lib/parse"
+import { mailtoHref } from "@/lib/site-config"
 import { getPublicConfig } from "@/lib/public-config"
 import { getServerSupabase } from "@/lib/supabase/server"
 import { cn } from "@/lib/utils"
@@ -30,7 +30,7 @@ export default async function VagaEmpresaPage({ params, searchParams }: { params
     supabase.from("vagas").select(VAGA_COLS).eq("id", id).maybeSingle(),
     supabase
       .from("inscritos_empresa")
-      .select("candidatura_id, status, nome, area_principal, experiencias, nota_prova, whatsapp")
+      .select("candidatura_id, status, nome, area_principal, experiencias, nota_prova, email")
       .eq("vaga_id", id)
       .order("created_at"),
     getPublicConfig(),
@@ -86,17 +86,15 @@ export default async function VagaEmpresaPage({ params, searchParams }: { params
                         ))}
                       </ul>
                     )}
-                    {c.whatsapp ? (
+                    {c.email ? (
                       <a
-                        href={`https://wa.me/${onlyDigitsPhone(c.whatsapp)}?text=${encodeURIComponent(`Olá, ${c.nome.split(" ")[0]}! Aqui é da vaga "${v.titulo}", via YL Empregabilidade.`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-sprout-soft text-sprout-deep mt-3 inline-flex min-h-11 items-center gap-2 rounded-full px-4 font-semibold"
+                        href={mailtoHref(c.email, `Entrevista: ${v.titulo}`, `Olá, ${c.nome.split(" ")[0]}! Aqui é da vaga "${v.titulo}", via YL Empregabilidade.\n\n`)}
+                        className="bg-sprout-soft text-sprout-deep mt-3 inline-flex max-w-full min-h-11 items-center gap-2 rounded-full px-4 font-semibold break-all"
                       >
-                        <MessageCircle className="size-4" aria-hidden /> {c.whatsapp}
+                        <Mail className="size-4 shrink-0" aria-hidden /> {c.email}
                       </a>
                     ) : (
-                      <p className="text-ink-soft mt-3 text-xs">O WhatsApp aparece quando você marcar “Entrevista”.</p>
+                      <p className="text-ink-soft mt-3 text-xs">O e-mail do candidato aparece quando você marcar “Entrevista”.</p>
                     )}
                     <form action={mudarStatusInscrito} className="mt-4 flex flex-wrap gap-2">
                       <input type="hidden" name="candidatura_id" value={c.candidatura_id} />

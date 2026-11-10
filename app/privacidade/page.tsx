@@ -39,7 +39,7 @@ export default function PrivacidadePage() {
           <p>Coletamos somente o que você informa ao criar sua conta e usar a plataforma:</p>
           <p className="text-ink font-semibold">Candidatos</p>
           <ul>
-            <li>Nome completo, WhatsApp, e-mail e senha (a senha é guardada de forma criptografada; ninguém da YL tem acesso a ela);</li>
+            <li>Nome completo, e-mail e senha (a senha é guardada de forma criptografada; ninguém da YL tem acesso a ela);</li>
             <li>Cidade e bairro (não pedimos endereço completo);</li>
             <li>Área principal e outras áreas de interesse;</li>
             <li>Até 3 experiências anteriores (empresa, função e tempo), se informadas;</li>
@@ -50,7 +50,7 @@ export default function PrivacidadePage() {
           </ul>
           <p className="text-ink font-semibold">Empresas</p>
           <ul>
-            <li>Nome da empresa, CNPJ (opcional), bairro, nome do responsável, WhatsApp, e-mail e senha;</li>
+            <li>Nome da empresa, CNPJ (opcional), bairro, nome do responsável, e-mail e senha;</li>
             <li>
               Dados das vagas: título, área/função, número de vagas, bairro, salário, data e horário da entrevista e
               descrição.
@@ -72,7 +72,7 @@ export default function PrivacidadePage() {
           <H2>4. Como usamos seus dados</H2>
           <p>
             Usamos os dados exclusivamente para conectar candidatos a vagas compatíveis, aplicar a provinha da área,
-            avisar sobre vagas e entrevistas (principalmente pelo WhatsApp) e apoiar as empresas na seleção. Não
+            avisar sobre vagas e entrevistas por e-mail e apoiar as empresas na seleção. Não
             vendemos seus dados.
           </p>
 
@@ -87,12 +87,12 @@ export default function PrivacidadePage() {
             </li>
             <li>
               <strong className="text-ink">Empresas:</strong> veem apenas os candidatos que se inscreveram nas vagas
-              delas, e só nome, área, experiências e nota da prova. O WhatsApp do candidato só aparece para a empresa
-              quando ele chega à etapa de entrevista. Empresas não veem e-mail, cidade nem pretensão salarial.
+              delas, e só nome, área, experiências e nota da prova. O e-mail do candidato só aparece para a empresa
+              quando ele chega à etapa de entrevista. Empresas não veem cidade nem pretensão salarial.
             </li>
             <li>
               <strong className="text-ink">Fornecedores</strong> que operam a plataforma (Supabase, Vercel, Formspree e
-              as ferramentas de atendimento por WhatsApp e de painéis que usamos), sempre para as finalidades descritas
+              as ferramentas de e-mail e de painéis que usamos), sempre para as finalidades descritas
               aqui.
             </li>
             <li>Autoridades, quando exigido por lei.</li>

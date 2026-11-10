@@ -7,7 +7,6 @@ export type CandFiltro = { q?: string; area?: string; bairro?: string; status?: 
 export type CandRow = {
   id: string
   nome: string
-  whatsapp: string
   email: string
   cidade: string
   area_principal: string
@@ -28,7 +27,7 @@ export async function buscarCandidatos(f: CandFiltro, limit = 1000) {
   const db = await getServerSupabase()
   let q = db
     .from("candidatos")
-    .select("id, nome, whatsapp, email, cidade, area_principal, outras_areas, pretensao_salarial, turnos, experiencias, status, created_at, consentimento_lgpd_em, respostas_prova(nota, provas(area))")
+    .select("id, nome, email, cidade, area_principal, outras_areas, pretensao_salarial, turnos, experiencias, status, created_at, consentimento_lgpd_em, respostas_prova(nota, provas(area))")
     .order("created_at", { ascending: false })
     .limit(limit)
   if (f.q) q = q.ilike("nome", `%${clean(f.q)}%`)

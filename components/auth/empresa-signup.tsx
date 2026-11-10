@@ -15,7 +15,7 @@ import { PasswordInput } from "@/components/auth/password-input"
 import { CheckboxField, TextField } from "@/components/forms/fields"
 import { SuccessPanel } from "@/components/forms/success-panel"
 import { authErrorMessage } from "@/lib/auth-errors"
-import { maskCnpj, maskPhone, onlyDigits } from "@/lib/masks"
+import { maskCnpj, onlyDigits } from "@/lib/masks"
 import { getBrowserSupabase } from "@/lib/supabase/client"
 
 const schema = z
@@ -23,7 +23,6 @@ const schema = z
     empresa: z.string().trim().min(2, "Informe o nome da empresa."),
     cnpj: z.string().refine((v) => v === "" || onlyDigits(v).length === 14, "CNPJ incompleto."),
     responsavel: z.string().trim().min(2, "Informe o nome do responsável."),
-    whatsapp: z.string().refine((v) => [10, 11].includes(onlyDigits(v).length), "Informe um WhatsApp com DDD."),
     email: z.string().trim().pipe(z.email("Informe um e-mail válido.")),
     bairro: z.string().trim(),
     senha: z.string().superRefine((v, ctx) => {
@@ -48,9 +47,8 @@ export function EmpresaSignup() {
   } = useForm<Values>({
     resolver: zodResolver(schema),
     mode: "onTouched",
-    defaultValues: { empresa: "", cnpj: "", responsavel: "", whatsapp: "", email: "", bairro: "", senha: "", confirma: "", consentimento: false },
+    defaultValues: { empresa: "", cnpj: "", responsavel: "", email: "", bairro: "", senha: "", confirma: "", consentimento: false },
   })
-  const whatsapp = register("whatsapp")
   const cnpj = register("cnpj")
 
   async function onSubmit(v: Values) {
@@ -65,7 +63,6 @@ export function EmpresaSignup() {
           empresa: v.empresa.trim(),
           cnpj: v.cnpj,
           responsavel: v.responsavel.trim(),
-          whatsapp: v.whatsapp,
           bairro: v.bairro.trim(),
           consentimento: true,
         },
@@ -116,23 +113,17 @@ export function EmpresaSignup() {
         <fieldset className="space-y-5">
           <legend className="text-ink font-display mb-4 text-xl font-semibold">Responsável e acesso</legend>
           <TextField label="Nome do responsável" required autoComplete="name" error={errors.responsavel?.message} {...register("responsavel")} />
-          <div className="grid gap-5 sm:grid-cols-2">
-            <TextField
-              label="WhatsApp"
-              required
-              type="tel"
-              inputMode="numeric"
-              autoComplete="tel-national"
-              placeholder="(11) 99999-9999"
-              error={errors.whatsapp?.message}
-              {...whatsapp}
-              onChange={(e) => {
-                e.target.value = maskPhone(e.target.value)
-                void whatsapp.onChange(e)
-              }}
-            />
-            <TextField label="E-mail" required type="email" inputMode="email" autoComplete="email" autoCapitalize="none" error={errors.email?.message} {...register("email")} />
-          </div>
+          <TextField
+            label="E-mail"
+            required
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            autoCapitalize="none"
+            hint="É por aqui que falamos com a empresa. Você também usa este e-mail para entrar."
+            error={errors.email?.message}
+            {...register("email")}
+          />
           <PasswordInput label="Crie uma senha" required autoComplete="new-password" hint="Pelo menos 8 caracteres, com letras e números." error={errors.senha?.message} {...register("senha")} />
           <PasswordInput label="Repita a senha" required autoComplete="new-password" error={errors.confirma?.message} {...register("confirma")} />
         </fieldset>

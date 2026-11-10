@@ -15,7 +15,7 @@ import { PasswordInput } from "@/components/auth/password-input"
 import { CheckboxField, SelectField, TextField } from "@/components/forms/fields"
 import { SuccessPanel } from "@/components/forms/success-panel"
 import { authErrorMessage } from "@/lib/auth-errors"
-import { maskCurrency, maskPhone, onlyDigits } from "@/lib/masks"
+import { maskCurrency } from "@/lib/masks"
 import { currencyToNumber } from "@/lib/parse"
 import { getBrowserSupabase } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
@@ -25,7 +25,6 @@ export const TURNOS = ["Manhã", "Tarde", "Noite", "Fim de semana"] as const
 const schema = z
   .object({
     nome: z.string().trim().min(3, "Informe seu nome completo."),
-    whatsapp: z.string().refine((v) => [10, 11].includes(onlyDigits(v).length), "Informe um WhatsApp com DDD, ex.: (11) 99999-9999."),
     email: z.string().trim().pipe(z.email("Informe um e-mail válido.")),
     cidade: z.string().trim().min(2, "Informe sua cidade e bairro."),
     area: z.string().min(1, "Escolha a área principal."),
@@ -47,7 +46,7 @@ const schema = z
 type Values = z.infer<typeof schema>
 
 const STEPS = [
-  { title: "Dados e contato", fields: ["nome", "whatsapp", "email", "cidade", "area", "areaOutra"] },
+  { title: "Dados e contato", fields: ["nome", "email", "cidade", "area", "areaOutra"] },
   { title: "Experiência e pretensão", fields: ["experiencias", "pretensao", "turnos"] },
   { title: "Senha e consentimento", fields: ["senha", "confirma", "consentimento"] },
 ] as const
@@ -69,7 +68,6 @@ export function CandidatoSignup({ areas }: { areas: string[] }) {
     mode: "onTouched",
     defaultValues: {
       nome: "",
-      whatsapp: "",
       email: "",
       cidade: "",
       area: "",
@@ -85,7 +83,6 @@ export function CandidatoSignup({ areas }: { areas: string[] }) {
   })
   const { fields, append, remove } = useFieldArray({ control, name: "experiencias" })
   const area = useWatch({ control, name: "area" })
-  const whatsapp = register("whatsapp")
   const pretensao = register("pretensao")
 
   async function goNext() {
@@ -107,7 +104,6 @@ export function CandidatoSignup({ areas }: { areas: string[] }) {
         data: {
           role: "candidato",
           nome: v.nome.trim(),
-          whatsapp: v.whatsapp,
           cidade: v.cidade.trim(),
           area_principal: areaPrincipal,
           outras_areas: v.outrasAreas.filter((a) => a !== areaPrincipal),
@@ -161,21 +157,6 @@ export function CandidatoSignup({ areas }: { areas: string[] }) {
         <div className={cn("space-y-5", step !== 0 && "hidden")}>
           <TextField label="Nome completo" required autoComplete="name" error={errors.nome?.message} {...register("nome")} />
           <TextField
-            label="WhatsApp"
-            required
-            type="tel"
-            inputMode="numeric"
-            autoComplete="tel-national"
-            placeholder="(11) 99999-9999"
-            hint="É por aqui que avisamos sobre vagas e entrevistas."
-            error={errors.whatsapp?.message}
-            {...whatsapp}
-            onChange={(e) => {
-              e.target.value = maskPhone(e.target.value)
-              void whatsapp.onChange(e)
-            }}
-          />
-          <TextField
             label="E-mail"
             required
             type="email"
@@ -183,7 +164,7 @@ export function CandidatoSignup({ areas }: { areas: string[] }) {
             autoComplete="email"
             autoCapitalize="none"
             placeholder="voce@exemplo.com"
-            hint="Você vai usar este e-mail para entrar."
+            hint="É por aqui que entramos em contato sobre vagas e entrevistas. Você também usa este e-mail para entrar."
             error={errors.email?.message}
             {...register("email")}
           />

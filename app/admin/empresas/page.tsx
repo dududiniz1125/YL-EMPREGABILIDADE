@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { MessageCircle } from "lucide-react"
+import { Mail } from "lucide-react"
 
 import { PageHeader } from "@/components/app/app-shell"
 import { ConfirmSubmit, SubmitButton } from "@/components/app/confirm-submit"
@@ -7,18 +7,19 @@ import { FilterTabs } from "@/components/app/filter-tabs"
 import { Card, EmptyState, Flash, StatusBadge } from "@/components/app/ui"
 import { setEmpresaStatus } from "@/app/admin/actions"
 import { requireRole } from "@/lib/auth"
-import { formatDate, onlyDigitsPhone } from "@/lib/parse"
+import { formatDate } from "@/lib/parse"
+import { mailtoHref } from "@/lib/site-config"
 import { getServerSupabase } from "@/lib/supabase/server"
 
 export default async function AdminEmpresas({ searchParams }: { searchParams: Promise<{ status?: string; ok?: string }> }) {
   const sp = await searchParams
   let q = (await getServerSupabase())
     .from("empresas")
-    .select("id, nome, cnpj, responsavel, whatsapp, email, bairro, status, created_at, vagas(count)")
+    .select("id, nome, cnpj, responsavel, email, bairro, status, created_at, vagas(count)")
     .order("created_at", { ascending: false })
   if (sp.status) q = q.eq("status", sp.status)
   const [, { data }] = await Promise.all([requireRole("admin"), q])
-  type Row = { id: string; nome: string; cnpj: string | null; responsavel: string; whatsapp: string; email: string; bairro: string | null; status: string; created_at: string; vagas: { count: number }[] }
+  type Row = { id: string; nome: string; cnpj: string | null; responsavel: string; email: string; bairro: string | null; status: string; created_at: string; vagas: { count: number }[] }
   const rows = (data ?? []) as unknown as Row[]
   const back = `/admin/empresas/${sp.status ? `?status=${sp.status}` : ""}`
 
@@ -52,12 +53,10 @@ export default async function AdminEmpresas({ searchParams }: { searchParams: Pr
                     Ver vagas ({e.vagas?.[0]?.count ?? 0})
                   </Link>
                   <a
-                    href={`https://wa.me/${onlyDigitsPhone(e.whatsapp)}?text=${encodeURIComponent(`Olá, ${e.responsavel.split(" ")[0]}! Aqui é da YL Empregabilidade.`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={mailtoHref(e.email, `YL Empregabilidade: cadastro da ${e.nome}`, `Olá, ${e.responsavel.split(" ")[0]}!\n\n`)}
                     className="bg-sprout-soft text-sprout-deep inline-flex min-h-11 items-center gap-2 rounded-full px-4 font-semibold"
                   >
-                    <MessageCircle className="size-4" aria-hidden /> WhatsApp
+                    <Mail className="size-4" aria-hidden /> Enviar e-mail
                   </a>
                   {e.status !== "aprovada" && (
                     <form action={setEmpresaStatus}>
