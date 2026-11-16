@@ -19,7 +19,7 @@ export function AuthButton({ className, onNavigate }: { className?: string; onNa
       href={logged ? "/minha-area/" : "/entrar/"}
       onClick={onNavigate}
       className={cn(
-        "text-ink hover:bg-paper-dim inline-flex h-11 items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold transition-colors",
+        "text-ink hover:bg-paper-dim inline-flex h-11 items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold whitespace-nowrap transition-colors",
         className
       )}
     >

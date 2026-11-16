@@ -5,15 +5,17 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowLeft, ArrowRight, Loader2, Plus, Trash2 } from "lucide-react"
-import { useFieldArray, useForm, useWatch } from "react-hook-form"
+import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { z } from "zod"
 
 import { notifySignup } from "@/app/(auth)/cadastro/actions"
 import { AuthAlert } from "@/components/auth/auth-card"
 import { passwordProblem } from "@/components/auth/new-password-form"
 import { PasswordInput } from "@/components/auth/password-input"
-import { CheckboxField, SelectField, TextField } from "@/components/forms/fields"
+import { AreaChips, AreaCombobox } from "@/components/forms/area-combobox"
+import { CheckboxField, TextField } from "@/components/forms/fields"
 import { SuccessPanel } from "@/components/forms/success-panel"
+import type { Categoria } from "@/lib/areas"
 import { authErrorMessage } from "@/lib/auth-errors"
 import { maskCurrency } from "@/lib/masks"
 import { currencyToNumber } from "@/lib/parse"
@@ -27,8 +29,7 @@ const schema = z
     nome: z.string().trim().min(3, "Informe seu nome completo."),
     email: z.string().trim().pipe(z.email("Informe um e-mail válido.")),
     cidade: z.string().trim().min(2, "Informe sua cidade e bairro."),
-    area: z.string().min(1, "Escolha a área principal."),
-    areaOutra: z.string().trim(),
+    area: z.string().trim().min(2, "Escolha a sua área principal (ou escreva qual é em “Outra”)."),
     outrasAreas: z.array(z.string()),
     experiencias: z.array(z.object({ empresa: z.string().trim(), funcao: z.string().trim(), tempo: z.string().trim() })).max(3),
     pretensao: z.string(),
@@ -40,18 +41,17 @@ const schema = z
     confirma: z.string(),
     consentimento: z.boolean().refine((v) => v, "É preciso concordar para criar a conta."),
   })
-  .refine((d) => d.area !== "Outra" || d.areaOutra.length >= 2, { path: ["areaOutra"], message: "Conte qual é a área." })
   .refine((d) => d.senha === d.confirma, { path: ["confirma"], message: "As senhas não são iguais." })
 
 type Values = z.infer<typeof schema>
 
 const STEPS = [
-  { title: "Dados e contato", fields: ["nome", "email", "cidade", "area", "areaOutra"] },
+  { title: "Dados e contato", fields: ["nome", "email", "cidade", "area"] },
   { title: "Experiência e pretensão", fields: ["experiencias", "pretensao", "turnos"] },
   { title: "Senha e consentimento", fields: ["senha", "confirma", "consentimento"] },
 ] as const
 
-export function CandidatoSignup({ areas }: { areas: string[] }) {
+export function CandidatoSignup({ categorias }: { categorias: Categoria[] }) {
   const router = useRouter()
   const [step, setStep] = useState(0)
   const [erro, setErro] = useState<string | null>(null)
@@ -71,7 +71,6 @@ export function CandidatoSignup({ areas }: { areas: string[] }) {
       email: "",
       cidade: "",
       area: "",
-      areaOutra: "",
       outrasAreas: [],
       experiencias: [{ empresa: "", funcao: "", tempo: "" }],
       pretensao: "",
@@ -95,7 +94,7 @@ export function CandidatoSignup({ areas }: { areas: string[] }) {
 
   async function onSubmit(v: Values) {
     setErro(null)
-    const areaPrincipal = v.area === "Outra" ? v.areaOutra : v.area
+    const areaPrincipal = v.area.trim()
     const { error } = await getBrowserSupabase().auth.signUp({
       email: v.email.trim(),
       password: v.senha,
@@ -127,7 +126,7 @@ export function CandidatoSignup({ areas }: { areas: string[] }) {
       <SuccessPanel
         tone="candidato"
         title="Conta criada!"
-        message={`Enviamos um link de confirmação para ${done.email}. Confirme o e-mail, entre na sua área e faça a provinha de ${done.area}: é ela que leva o seu perfil até as empresas.`}
+        message={`Enviamos um link de confirmação para ${done.email}. Confirme o e-mail e entre na sua área: você já pode se candidatar às vagas de ${done.area}. Se a sua área tiver provinha, ela aparece lá também.`}
         resetLabel="Ir para entrar"
         onReset={() => router.push("/entrar/?tipo=candidato")}
       />
@@ -169,22 +168,36 @@ export function CandidatoSignup({ areas }: { areas: string[] }) {
             {...register("email")}
           />
           <TextField label="Cidade / bairro" required autoComplete="address-level2" placeholder="Ex.: São Paulo, Pinheiros" error={errors.cidade?.message} {...register("cidade")} />
-          <SelectField label="Área principal" required options={areas} placeholder="Selecione" error={errors.area?.message} hint="Você fará a provinha desta área." {...register("area")} />
-          {area === "Outra" && <TextField label="Qual área?" required error={errors.areaOutra?.message} {...register("areaOutra")} />}
-          <fieldset>
-            <legend className="text-ink mb-1.5 text-[0.95rem] font-semibold">
-              Outras áreas que topa <span className="text-ink-soft font-normal">(opcional)</span>
-            </legend>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {areas
-                .filter((a) => a !== "Outra" && a !== area)
-                .map((a) => (
-                  <CheckboxField key={a} value={a} {...register("outrasAreas")}>
-                    {a}
-                  </CheckboxField>
-                ))}
-            </div>
-          </fieldset>
+          <Controller
+            control={control}
+            name="area"
+            render={({ field }) => (
+              <AreaCombobox
+                label="Área principal"
+                required
+                categorias={categorias}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                error={errors.area?.message}
+                hint="Busque pela função, por exemplo: vendedor, professor, auxiliar administrativo."
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="outrasAreas"
+            render={({ field }) => (
+              <AreaChips
+                label="Outras áreas que topa"
+                categorias={categorias}
+                value={field.value}
+                onChange={field.onChange}
+                exclude={area ? [area] : []}
+                max={5}
+              />
+            )}
+          />
         </div>
 
         <div className={cn("space-y-5", step !== 1 && "hidden")}>

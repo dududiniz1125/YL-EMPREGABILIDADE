@@ -3,6 +3,7 @@ import Link from "next/link"
 import { PageHeader } from "@/components/app/app-shell"
 import { SubmitButton } from "@/components/app/confirm-submit"
 import { Card, EmptyState, Flash } from "@/components/app/ui"
+import { AreaOptions } from "@/components/forms/area-options"
 import { inputClass } from "@/components/forms/fields"
 import { criarProva } from "@/app/admin/actions"
 import { requireRole } from "@/lib/auth"
@@ -12,7 +13,7 @@ import { getServerSupabase } from "@/lib/supabase/server"
 export default async function AdminProvas({ searchParams }: { searchParams: Promise<{ ok?: string; erro?: string }> }) {
   const sp = await searchParams
   const db = await getServerSupabase()
-  const [, { data }, { areas }] = await Promise.all([
+  const [, { data }, { categorias }] = await Promise.all([
     requireRole("admin"),
     db.from("provas").select("id, area, titulo, ativa, questoes(count), respostas_prova(count)").order("area"),
     getPublicConfig(),
@@ -20,7 +21,7 @@ export default async function AdminProvas({ searchParams }: { searchParams: Prom
   type Row = { id: string; area: string; titulo: string; ativa: boolean; questoes: { count: number }[]; respostas_prova: { count: number }[] }
   const rows = (data ?? []) as unknown as Row[]
   const usadas = new Set(rows.map((r) => r.area))
-  const livres = areas.filter((a) => a !== "Outra" && !usadas.has(a))
+  const livres = categorias.flatMap((c) => c.areas).filter((a) => a !== "Outra" && !usadas.has(a))
 
   return (
     <>
@@ -63,14 +64,12 @@ export default async function AdminProvas({ searchParams }: { searchParams: Prom
               <label className="flex flex-col gap-1.5">
                 <span className="text-ink font-semibold">Área</span>
                 <select name="area" required className={inputClass}>
-                  {livres.map((a) => (
-                    <option key={a}>{a}</option>
-                  ))}
+                  <AreaOptions categorias={categorias} exclude={[...usadas]} />
                 </select>
               </label>
               <label className="flex flex-col gap-1.5">
                 <span className="text-ink font-semibold">Título</span>
-                <input name="titulo" placeholder="Ex.: Prova de garçom" className={inputClass} />
+                <input name="titulo" placeholder="Ex.: Prova de vendedor(a)" className={inputClass} />
               </label>
               <SubmitButton tone="admin">Criar prova</SubmitButton>
             </form>

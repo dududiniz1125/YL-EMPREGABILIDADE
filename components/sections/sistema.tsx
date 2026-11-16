@@ -3,6 +3,7 @@ import { BarChart3, BellRing, CalendarCheck, ClipboardCheck, ClipboardList, Head
 import { BlurFade } from "@/components/magicui/blur-fade"
 import { BorderBeam } from "@/components/magicui/border-beam"
 import { SectionHeading } from "@/components/site/section-heading"
+import { amostraAreas } from "@/lib/areas"
 import { getPublicConfig } from "@/lib/public-config"
 import { cn } from "@/lib/utils"
 
@@ -34,8 +35,8 @@ function CardIcon({ icon: Icon, className }: { icon: typeof ClipboardList; class
 }
 
 export async function Sistema() {
-  const { areas: all } = await getPublicConfig()
-  const areas = all.filter((a) => a !== "Outra")
+  const { categorias } = await getPublicConfig()
+  const areas = amostraAreas(categorias, 1).slice(0, 8)
   return (
     <section id="sistema" aria-labelledby="sistema-title" className="py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -59,10 +60,11 @@ export async function Sistema() {
               </div>
               <h3 className="text-ink mt-5 text-2xl font-semibold sm:text-3xl">Provas por área</h3>
               <p className="text-ink-soft mt-2 max-w-xl leading-relaxed">
-                Testes online por área de atuação avaliam o conhecimento técnico antes da entrevista.
-                A empresa recebe candidatos já triados, e o candidato mostra o que sabe fazer.
+                Nas áreas que têm prova, um teste online avalia o conhecimento técnico antes da entrevista.
+                A empresa recebe candidatos já triados, e o candidato mostra o que sabe fazer. Atendemos
+                funções de todas as áreas, do comércio à educação.
               </p>
-              <ul className="mt-6 flex flex-wrap gap-2" aria-label="Exemplos de áreas com prova">
+              <ul className="mt-6 flex flex-wrap gap-2" aria-label="Exemplos de funções atendidas">
                 {areas.map((a) => (
                   <li
                     key={a}
@@ -86,7 +88,7 @@ export async function Sistema() {
               <ul className="mt-6 space-y-3">
                 {[
                   [MailCheck, "Confirmação do cadastro"],
-                  [ClipboardCheck, "Provinha liberada na sua área"],
+                  [ClipboardCheck, "Provinha liberada (quando a área tiver)"],
                   [BellRing, "Vaga compatível com o seu perfil"],
                   [CalendarCheck, "Convite para entrevista"],
                 ].map(([Icon, label]) => {

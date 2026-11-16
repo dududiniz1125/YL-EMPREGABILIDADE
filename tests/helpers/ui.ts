@@ -29,3 +29,12 @@ export async function newSession(browser: Browser, use: Record<string, unknown>)
 export function cardWithHeading(page: Page, name: string) {
   return page.getByRole("heading", { name }).locator("xpath=ancestor::div[contains(@class,'rounded-3xl')][1]")
 }
+
+/** Escolhe uma área no campo de busca (combobox) digitando parte do nome. */
+export async function pickArea(page: Page, label: RegExp, search: string, option: string) {
+  const box = page.getByRole("combobox", { name: label })
+  await box.click()
+  await box.fill(search)
+  await page.getByRole("option", { name: option, exact: true }).click()
+  await expect(box).toHaveValue(option)
+}

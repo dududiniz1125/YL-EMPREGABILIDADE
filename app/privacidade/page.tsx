@@ -44,7 +44,7 @@ export default function PrivacidadePage() {
             <li>Área principal e outras áreas de interesse;</li>
             <li>Até 3 experiências anteriores (empresa, função e tempo), se informadas;</li>
             <li>Pretensão salarial e disponibilidade de turno, se informadas;</li>
-            <li>Respostas e nota da provinha online da área;</li>
+            <li>Respostas e nota da provinha online, nas áreas que têm prova;</li>
             <li>Candidaturas às vagas e o andamento de cada uma;</li>
             <li>Data e hora em que você concordou com esta política.</li>
           </ul>
@@ -71,7 +71,7 @@ export default function PrivacidadePage() {
 
           <H2>4. Como usamos seus dados</H2>
           <p>
-            Usamos os dados exclusivamente para conectar candidatos a vagas compatíveis, aplicar a provinha da área,
+            Usamos os dados exclusivamente para conectar candidatos a vagas compatíveis, aplicar a provinha (nas áreas que têm prova),
             avisar sobre vagas e entrevistas por e-mail e apoiar as empresas na seleção. Não
             vendemos seus dados.
           </p>

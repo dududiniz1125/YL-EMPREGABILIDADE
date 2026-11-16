@@ -1,11 +1,12 @@
 import { Sprout } from "lucide-react"
 
 import { Marquee } from "@/components/magicui/marquee"
+import { amostraAreas } from "@/lib/areas"
 import { getPublicConfig } from "@/lib/public-config"
 
 export async function AreasMarquee() {
-  const { areas: all } = await getPublicConfig()
-  const areas = all.filter((a) => a !== "Outra")
+  const { categorias } = await getPublicConfig()
+  const areas = amostraAreas(categorias, 2)
   return (
     <section aria-label="Áreas atendidas" className="border-line/70 border-y bg-white/50 py-5">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 sm:flex-row sm:gap-6 sm:px-6">

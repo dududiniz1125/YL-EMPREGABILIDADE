@@ -62,7 +62,7 @@ export default async function CandidatoHome({ searchParams }: { searchParams: Pr
             <div>
               <p className="text-ink-soft text-sm">Provinha da área</p>
               <p className="text-ink font-semibold">
-                {!prova ? "Em preparação para a sua área" : resposta ? `Concluída · nota ${Number(resposta.nota).toLocaleString("pt-BR")}` : "Ainda não feita"}
+                {!prova ? "Sua área não tem provinha" : resposta ? `Concluída · nota ${Number(resposta.nota).toLocaleString("pt-BR")}` : "Ainda não feita"}
               </p>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default async function CandidatoHome({ searchParams }: { searchParams: Pr
               Faça sua prova <ArrowRight className="size-4" aria-hidden />
             </ButtonLink>
           )}
-          {!prova && <p className="text-ink-soft mt-3 text-sm">Avisamos por e-mail quando ela estiver disponível.</p>}
+          {!prova && <p className="text-ink-soft mt-3 text-sm">Tudo certo: você já pode se candidatar normalmente. Se uma prova for criada para a sua área, ela aparece aqui.</p>}
         </Card>
       </div>
 

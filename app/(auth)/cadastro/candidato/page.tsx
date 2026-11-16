@@ -13,11 +13,11 @@ export const metadata: Metadata = {
 export const revalidate = 300
 
 export default async function CadastroCandidatoPage() {
-  const { areas } = await getPublicConfig()
+  const { categorias } = await getPublicConfig()
   return (
     <AuthCard wide>
       {isSupabaseConfigured ? (
-        <CandidatoSignup areas={areas} />
+        <CandidatoSignup categorias={categorias} />
       ) : (
         <p className="text-ink-soft">O cadastro com conta está sendo ativado. Volte em breve.</p>
       )}

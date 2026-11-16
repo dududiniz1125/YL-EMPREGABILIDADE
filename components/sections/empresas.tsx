@@ -6,7 +6,7 @@ import { ShineBorder } from "@/components/magicui/shine-border"
 import { SectionHeading } from "@/components/site/section-heading"
 
 const perks = [
-  { icon: BadgeCheck, text: "Candidatos avaliados pela provinha da área" },
+  { icon: BadgeCheck, text: "Candidatos de qualquer área, avaliados pela provinha quando houver" },
   { icon: CalendarClock, text: "Entrevistas no dia e horário que você definir" },
   { icon: Users, text: "Acompanhamento dos inscritos com a nossa equipe" },
 ]
@@ -29,7 +29,7 @@ export function Empresas() {
                 Encontre as pessoas <span className="text-seed italic">certas</span> para a sua equipe.
               </>
             }
-            description="Publique sua vaga com data e horário de entrevista. Nós levamos até você candidatos que já passaram pela provinha da área."
+            description="Publique sua vaga com data e horário de entrevista. Nós levamos até você candidatos da área certa e, quando a área tem prova, já avaliados."
           />
           <ul className="mt-8 space-y-3">
             {perks.map((p) => (
@@ -49,7 +49,7 @@ export function Empresas() {
               {[
                 ["Crie a conta da empresa", "Dados da empresa, do responsável e uma senha."],
                 ["Publique suas vagas", "Função, salário, local e data/horário da entrevista."],
-                ["Receba os inscritos", "Candidatos com nota da provinha e experiências. O e-mail do candidato libera na etapa de entrevista."],
+                ["Receba os inscritos", "Candidatos com experiências e, quando houver, nota da provinha. O e-mail do candidato libera na etapa de entrevista."],
               ].map(([t, d], i) => (
                 <li key={t} className="flex gap-4">
                   <span className="bg-seed font-display flex size-10 shrink-0 items-center justify-center rounded-full text-lg font-semibold text-white">

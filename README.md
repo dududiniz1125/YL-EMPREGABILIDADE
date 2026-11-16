@@ -37,7 +37,7 @@ O `.env.local` está no `.gitignore`.
 ## 3. Colocar o Supabase no ar (passo a passo)
 
 1. **Criar o banco pela Vercel:** projeto na Vercel → **Storage** → **Create** → **Supabase**. Conecte ao projeto `yl-empregabilidade`. As variáveis `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `SUPABASE_SERVICE_ROLE_KEY` são criadas sozinhas no projeto.
-2. **Criar as tabelas:** no painel do Supabase → **SQL Editor**, rode, em ordem, os arquivos de `supabase/migrations/` (`…0100_schema.sql`, `…0200_functions_triggers.sql`, `…0300_rls.sql`, `…0400_role_no_token.sql`, `…0500_remove_whatsapp.sql`). Com o Supabase CLI: `supabase link --project-ref <ref>` e `supabase db push`.
+2. **Criar as tabelas:** no painel do Supabase → **SQL Editor**, rode, em ordem, os arquivos de `supabase/migrations/` (`…0100_schema.sql`, `…0200_functions_triggers.sql`, `…0300_rls.sql`, `…0400_role_no_token.sql`, `…0500_remove_whatsapp.sql`, `…0600_areas_categorias.sql`). Com o Supabase CLI: `supabase link --project-ref <ref>` e `supabase db push`.
 3. **Autenticação** (Supabase → **Authentication**):
    - **URL Configuration** → *Site URL*: `https://yl-empregabilidade.vercel.app`. *Redirect URLs*: `https://yl-empregabilidade.vercel.app/**` (depois, adicione também o domínio próprio: `https://ylempregabilidade.com.br/**`).
    - **Sign In / Providers → Email**: deixe **Confirm email** ligado.
@@ -80,6 +80,14 @@ No plano gratuito, o Supabase **pausa o projeto depois de cerca de uma semana se
 - O `proxy.ts` valida o token localmente e lê o papel de dentro dele (`app_metadata.role`, preenchido pela migration `…0400`). A checagem completa (`getUser`) fica nas páginas e server actions, rodando em paralelo com as consultas.
 - `loading.tsx` em `/admin`, `/candidato` e `/empresa` mostra o esqueleto da tela na hora do clique.
 
+### Áreas e provas
+
+- A YL atende **todas as áreas de emprego**. A lista padrão (14 categorias, mais de 100 funções) está em `lib/areas.ts`. No banco, fica em `configuracoes.areas_por_categoria` (agrupada) e `configuracoes.areas` (lista simples).
+- O admin edita em **Configurações**: cada categoria começa com `# Nome da categoria`, com uma função por linha embaixo. "Outra" entra sozinha no fim.
+- No cadastro, a área é escolhida num **campo de busca com sugestões** agrupadas por categoria (funciona sem acento e pelo nome da categoria). "Outra" abre um campo para escrever a função.
+- **Provas são opcionais:** só as áreas com prova cadastrada (em /admin/provas) pedem prova. Nas outras, cadastro e candidatura funcionam normalmente, e os painéis mostram "sem prova" no lugar da nota.
+- Para regenerar o SQL da lista padrão: `node --import tsx scripts/gerar-sql-areas.ts`.
+
 ## 4. Papéis
 
 | Papel | Área | O que pode |
@@ -97,7 +105,7 @@ Quem garante isso é o banco (Row Level Security em todas as tabelas + função 
 
 ## 5. Editar conteúdo
 
-- **Pelo painel** (`/admin/configuracoes`): áreas/funções (formulários, filtros e faixa de áreas do site), e-mail, telefone, endereço e a seção de números da landing (dados reais do banco).
+- **Pelo painel** (`/admin/configuracoes`): áreas/funções **por categoria** (cadastro, filtros e faixa de áreas do site), e-mail, telefone, endereço e a seção de números da landing (dados reais do banco).
 - **No código:** textos das seções em `components/sections/*`; dados fixos (nome, CNPJ, cidade) em `lib/site-config.ts`; política em `app/privacidade/page.tsx`.
 - O Formspree recebe só um **aviso** por e-mail a cada cadastro (nome, área e cidade). Os dados ficam no Supabase.
 

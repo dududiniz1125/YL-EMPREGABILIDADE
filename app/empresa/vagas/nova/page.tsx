@@ -7,13 +7,13 @@ import { getPublicConfig } from "@/lib/public-config"
 
 export default async function NovaVagaPage({ searchParams }: { searchParams: Promise<{ erro?: string }> }) {
   const sp = await searchParams
-  const [, { areas }] = await Promise.all([requireRole("empresa"), getPublicConfig()])
+  const [, { categorias }] = await Promise.all([requireRole("empresa"), getPublicConfig()])
   return (
     <>
       {sp.erro && <Flash tone="error">Preencha o título e a área da vaga.</Flash>}
       <PageHeader title="Nova vaga" description="A vaga fica pendente até a nossa equipe aprovar. Leva pouco tempo." />
       <Card className="max-w-3xl">
-        <VagaForm action={criarVaga} areas={areas} submitLabel="Enviar vaga para aprovação" />
+        <VagaForm action={criarVaga} categorias={categorias} submitLabel="Enviar vaga para aprovação" />
       </Card>
     </>
   )

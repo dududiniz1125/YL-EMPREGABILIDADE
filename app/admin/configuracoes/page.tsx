@@ -4,6 +4,8 @@ import { Card, Flash } from "@/components/app/ui"
 import { inputClass } from "@/components/forms/fields"
 import { salvarConfig } from "@/app/admin/actions"
 import { requireRole } from "@/lib/auth"
+import { categoriasToText } from "@/lib/areas"
+import { getPublicConfig } from "@/lib/public-config"
 import { getServerSupabase } from "@/lib/supabase/server"
 
 function F({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
@@ -19,11 +21,13 @@ function F({ label, hint, children }: { label: string; hint?: string; children: 
 export default async function AdminConfig({ searchParams }: { searchParams: Promise<{ ok?: string; erro?: string }> }) {
   const sp = await searchParams
   const supabase = await getServerSupabase()
-  const [, { data: c }] = await Promise.all([
+  const [, { data: c }, { categorias }] = await Promise.all([
     requireRole("admin"),
-    supabase.from("configuracoes").select("areas, email, telefone, endereco, mostrar_numeros").eq("id", 1).single(),
+    supabase.from("configuracoes").select("email, telefone, endereco, mostrar_numeros").eq("id", 1).single(),
+    getPublicConfig(),
   ])
   if (!c) return null
+  const total = categorias.reduce((n, cat) => n + cat.areas.filter((a) => a !== "Outra").length, 0)
   return (
     <>
       {sp.ok && <Flash>Configurações salvas. O site é atualizado em instantes.</Flash>}
@@ -31,9 +35,21 @@ export default async function AdminConfig({ searchParams }: { searchParams: Prom
       <PageHeader title="Configurações" description="O que aparece no site e nos formulários." />
       <Card className="max-w-3xl">
         <form action={salvarConfig} className="space-y-6">
-          <F label="Áreas / funções" hint="Uma por linha. Alimentam os formulários, os filtros e a faixa de áreas do site. “Outra” fica sempre no fim.">
-            <textarea name="areas" rows={8} defaultValue={(c.areas as string[]).join("\n")} className={`${inputClass} h-auto py-3`} />
+          <F
+            label={`Áreas / funções (${total} em ${categorias.length - 1} categorias)`}
+            hint="Comece cada categoria com # e o nome (ex.: # Comércio e vendas) e escreva uma função por linha embaixo. Alimentam o cadastro, os filtros e a faixa de áreas do site. “Outra” entra sozinha no fim."
+          >
+            <textarea
+              name="areas"
+              rows={18}
+              defaultValue={categoriasToText(categorias)}
+              spellCheck={false}
+              className={`${inputClass} h-auto py-3 font-mono text-sm leading-relaxed`}
+            />
           </F>
+          <p className="text-ink-soft -mt-3 text-sm">
+            Mudar o nome de uma função não altera quem já se cadastrou com o nome antigo, nem a prova ligada a ela.
+          </p>
           <div className="grid gap-5 sm:grid-cols-2">
             <F label="E-mail de contato">
               <input name="email" type="email" defaultValue={c.email} className={inputClass} />

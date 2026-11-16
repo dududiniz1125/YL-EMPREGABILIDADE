@@ -3,15 +3,29 @@ import { Download } from "lucide-react"
 
 import { PageHeader } from "@/components/app/app-shell"
 import { btnClass, Card, EmptyState, Flash, StatusBadge } from "@/components/app/ui"
+import { AreaOptions } from "@/components/forms/area-options"
 import { inputClass } from "@/components/forms/fields"
 import { buscarCandidatos, melhorNota, type CandFiltro } from "@/lib/admin-candidatos"
 import { requireRole } from "@/lib/auth"
+import { getServerSupabase } from "@/lib/supabase/server"
 import { formatBRL, formatDate } from "@/lib/parse"
 import { getPublicConfig } from "@/lib/public-config"
 
 export default async function AdminCandidatos({ searchParams }: { searchParams: Promise<CandFiltro & { ok?: string }> }) {
   const sp = await searchParams
-  const [, rows, { areas }] = await Promise.all([requireRole("admin"), buscarCandidatos(sp, 300), getPublicConfig()])
+  const supabase = await getServerSupabase()
+  const [, rows, { categorias }, { data: provas }] = await Promise.all([
+    requireRole("admin"),
+    buscarCandidatos(sp, 300),
+    getPublicConfig(),
+    supabase.from("provas").select("area").eq("ativa", true),
+  ])
+  const areasComProva = new Set((provas ?? []).map((p) => p.area))
+  const nota = (c: (typeof rows)[number]) => {
+    const n = melhorNota(c)
+    if (n !== null) return n.toLocaleString("pt-BR")
+    return areasComProva.has(c.area_principal) ? "não fez" : "sem prova"
+  }
   const filtros = new URLSearchParams(
     Object.entries({ q: sp.q, area: sp.area, bairro: sp.bairro, status: sp.status, nota: sp.nota, pretensao: sp.pretensao }).filter(([, v]) => v) as [string, string][]
   )
@@ -37,9 +51,7 @@ export default async function AdminCandidatos({ searchParams }: { searchParams: 
           <span className="text-ink text-sm font-semibold">Área</span>
           <select name="area" defaultValue={sp.area ?? ""} className={inputClass}>
             <option value="">Todas</option>
-            {areas.map((a) => (
-              <option key={a}>{a}</option>
-            ))}
+            <AreaOptions categorias={categorias} />
           </select>
         </label>
         <label className="flex flex-col gap-1">
@@ -93,7 +105,7 @@ export default async function AdminCandidatos({ searchParams }: { searchParams: 
                       <StatusBadge status={c.status} />
                     </div>
                     <p className="text-ink-soft mt-2 text-sm">
-                      Nota: {melhorNota(c)?.toLocaleString("pt-BR") ?? "—"} · {formatBRL(c.pretensao_salarial)}
+                      Nota: {nota(c)} · {formatBRL(c.pretensao_salarial)}
                     </p>
                   </Card>
                 </Link>
@@ -122,7 +134,7 @@ export default async function AdminCandidatos({ searchParams }: { searchParams: 
                     </td>
                     <td className="px-4 py-3">{c.area_principal}</td>
                     <td className="px-4 py-3">{c.cidade}</td>
-                    <td className="px-4 py-3">{melhorNota(c)?.toLocaleString("pt-BR") ?? "—"}</td>
+                    <td className="px-4 py-3">{nota(c)}</td>
                     <td className="px-4 py-3 whitespace-nowrap">{formatBRL(c.pretensao_salarial)}</td>
                     <td className="px-4 py-3">
                       <StatusBadge status={c.status} />

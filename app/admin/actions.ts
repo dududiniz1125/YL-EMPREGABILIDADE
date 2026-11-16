@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
+import { flattenAreas, textToCategorias } from "@/lib/areas"
 import { assertRole } from "@/lib/auth"
 import { logAdmin } from "@/lib/admin-log"
 import { brtToIso, currencyToNumber } from "@/lib/parse"
@@ -187,15 +188,12 @@ export async function excluirProva(f: FormData) {
 /* ---------------------------- Configurações --------------------------- */
 export async function salvarConfig(f: FormData) {
   const s = await assertRole("admin")
-  const areas = str(f, "areas")
-    .split("\n")
-    .map((a) => a.trim())
-    .filter(Boolean)
-  if (!areas.includes("Outra")) areas.push("Outra")
+  const categorias = textToCategorias(String(f.get("areas") ?? ""))
   const { error } = await (await getServerSupabase())
     .from("configuracoes")
     .update({
-      areas: Array.from(new Set(areas)),
+      areas: flattenAreas(categorias),
+      areas_por_categoria: categorias,
       email: str(f, "email"),
       telefone: str(f, "telefone"),
       endereco: str(f, "endereco"),

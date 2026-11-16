@@ -4,11 +4,11 @@ import { forwardRef, useRef } from "react"
 import Image from "next/image"
 import {
   Building2,
-  ChefHat,
-  ConciergeBell,
+  GraduationCap,
+  School,
+  ShoppingBag,
   Store,
   User,
-  UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react"
 
@@ -78,8 +78,8 @@ export function HeroBridge() {
         className="relative flex items-center justify-between gap-2"
       >
         <div className="flex flex-col gap-5 sm:gap-7">
-          <Node ref={c1} icon={ConciergeBell} label="Garçom" side="candidato" />
-          <Node ref={c2} icon={ChefHat} label="Cozinha" side="candidato" />
+          <Node ref={c1} icon={ShoppingBag} label="Vendas" side="candidato" />
+          <Node ref={c2} icon={GraduationCap} label="Educação" side="candidato" />
           <Node ref={c3} icon={User} label="Você" side="candidato" />
         </div>
 
@@ -103,7 +103,7 @@ export function HeroBridge() {
         </div>
 
         <div className="flex flex-col gap-5 sm:gap-7">
-          <Node ref={e1} icon={UtensilsCrossed} label="Restaurante" side="empresa" />
+          <Node ref={e1} icon={School} label="Escola" side="empresa" />
           <Node ref={e2} icon={Store} label="Comércio" side="empresa" />
           <Node ref={e3} icon={Building2} label="Empresa" side="empresa" />
         </div>

@@ -74,7 +74,7 @@ export function Navbar({ onHome = true }: { onHome?: boolean }) {
                     href={href(l.id)}
                     aria-current={isActive ? "true" : undefined}
                     className={cn(
-                      "relative inline-flex min-h-11 items-center rounded-full px-3 text-[0.92rem] font-medium transition-colors",
+                      "relative inline-flex min-h-11 items-center rounded-full px-2.5 text-[0.92rem] font-medium whitespace-nowrap transition-colors xl:px-3",
                       isActive ? "text-ink" : "text-ink-soft hover:text-ink"
                     )}
                   >
@@ -98,13 +98,13 @@ export function Navbar({ onHome = true }: { onHome?: boolean }) {
           <div className="hidden items-center gap-2 md:flex">
             <a
               href={href("candidatos")}
-              className="bg-sprout-deep hover:bg-sprout-deep/90 inline-flex h-11 items-center rounded-full px-5 text-sm font-semibold text-white shadow-sm transition-colors"
+              className="bg-sprout-deep hover:bg-sprout-deep/90 inline-flex h-11 items-center rounded-full px-5 text-sm font-semibold whitespace-nowrap text-white shadow-sm transition-colors"
             >
               Sou candidato
             </a>
             <a
               href={href("empresas")}
-              className="border-seed/30 text-seed-deep hover:bg-seed-soft hidden h-11 items-center rounded-full border bg-white/60 px-5 text-sm font-semibold transition-colors xl:inline-flex"
+              className="border-seed/30 text-seed-deep hover:bg-seed-soft hidden h-11 items-center rounded-full border bg-white/60 px-5 text-sm font-semibold whitespace-nowrap transition-colors 2xl:inline-flex"
             >
               Sou empresa
             </a>

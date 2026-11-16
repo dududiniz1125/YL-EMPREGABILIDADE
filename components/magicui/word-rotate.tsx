@@ -15,6 +15,8 @@ interface WordRotateProps {
   duration?: number
   motionProps?: MotionProps
   className?: string
+  /** diminui a fonte das palavras longas para caberem numa linha só */
+  fitLongWords?: boolean
 }
 
 export function WordRotate({
@@ -27,6 +29,7 @@ export function WordRotate({
     transition: { duration: 0.25, ease: "easeOut" },
   },
   className,
+  fitLongWords = false,
 }: WordRotateProps) {
   const [index, setIndex] = useState(0)
   const reduce = useReducedMotion()
@@ -46,7 +49,11 @@ export function WordRotate({
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
           key={words[index]}
-          className={cn(className)}
+          className={cn(
+            className,
+            fitLongWords && words[index].length > 16 && "text-[0.6em]",
+            fitLongWords && words[index].length > 12 && words[index].length <= 16 && "text-[0.8em]"
+          )}
           {...motionProps}
         >
           {words[index]}

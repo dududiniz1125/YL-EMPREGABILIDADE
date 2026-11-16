@@ -33,8 +33,8 @@ const candidato: Step[] = [
   },
   {
     icon: ClipboardList,
-    title: "Faça a provinha online da sua área",
-    text: "Um teste rápido sobre a função que você busca (garçom, cumim, cozinha e outras), para mostrar o que você sabe.",
+    title: "Faça a provinha da sua área, se houver",
+    text: "Em várias áreas há um teste online rápido sobre a função que você busca, para mostrar o que você sabe. Se a sua não tiver, é só seguir para as vagas.",
   },
   {
     icon: MessageCircle,
@@ -52,7 +52,7 @@ const empresa: Step[] = [
   {
     icon: BadgeCheck,
     title: "Receba candidatos já triados",
-    text: "Os candidatos chegam até você já avaliados pela provinha da área.",
+    text: "Nas áreas com prova, os candidatos chegam até você já avaliados pela provinha.",
   },
   {
     icon: Briefcase,

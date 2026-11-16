@@ -3,11 +3,15 @@ import "server-only"
 import { cache } from "react"
 import { createClient } from "@supabase/supabase-js"
 
+import { CATEGORIAS_PADRAO, flattenAreas, OUTRA, type Categoria } from "@/lib/areas"
 import { siteConfig } from "@/lib/site-config"
 import { isSupabaseConfigured, SUPABASE_ANON_KEY, SUPABASE_URL } from "@/lib/supabase/env"
 
 export type PublicConfig = {
+  /** lista simples, com "Outra" no fim */
   areas: string[]
+  /** as mesmas áreas agrupadas por categoria */
+  categorias: Categoria[]
   email: string
   phone: string
   address: string
@@ -15,7 +19,8 @@ export type PublicConfig = {
 }
 
 const fallback: PublicConfig = {
-  areas: [...siteConfig.areas],
+  areas: flattenAreas(CATEGORIAS_PADRAO),
+  categorias: CATEGORIAS_PADRAO,
   email: siteConfig.email,
   phone: siteConfig.phone,
   address: siteConfig.address,
@@ -31,12 +36,15 @@ export const getPublicConfig = cache(async (): Promise<PublicConfig> => {
   try {
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false } })
     const [{ data: cfg }, { data: stats }] = await Promise.all([
-      db.from("configuracoes").select("areas, email, telefone, endereco").eq("id", 1).maybeSingle(),
+      // "*" de propósito: funciona antes e depois da coluna areas_por_categoria existir
+      db.from("configuracoes").select("*").eq("id", 1).maybeSingle(),
       db.rpc("public_stats"),
     ])
     if (!cfg) return fallback
+    const categorias = montarCategorias(cfg.areas_por_categoria, cfg.areas)
     return {
-      areas: cfg.areas?.length ? cfg.areas : fallback.areas,
+      areas: flattenAreas(categorias),
+      categorias,
       email: cfg.email || fallback.email,
       phone: cfg.telefone ?? "",
       address: cfg.endereco ?? "",
@@ -46,3 +54,16 @@ export const getPublicConfig = cache(async (): Promise<PublicConfig> => {
     return fallback
   }
 })
+
+/** Usa as categorias do banco; se ainda não houver, agrupa a lista simples antiga. */
+function montarCategorias(porCategoria: unknown, simples: string[] | null | undefined): Categoria[] {
+  if (Array.isArray(porCategoria) && porCategoria.length) {
+    const cats = (porCategoria as Categoria[]).filter((c) => c?.nome && Array.isArray(c.areas) && c.areas.length)
+    if (cats.length) {
+      return cats.some((c) => c.areas.includes(OUTRA)) ? cats : [...cats, { nome: "Outra", areas: [OUTRA] }]
+    }
+  }
+  const lista = (simples ?? []).filter((a) => a !== OUTRA)
+  if (!lista.length) return CATEGORIAS_PADRAO
+  return [{ nome: "Funções", areas: lista }, { nome: "Outra", areas: [OUTRA] }]
+}

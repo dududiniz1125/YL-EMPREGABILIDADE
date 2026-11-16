@@ -1,5 +1,7 @@
 import { SubmitButton } from "@/components/app/confirm-submit"
+import { AreaCombobox } from "@/components/forms/area-combobox"
 import { inputClass } from "@/components/forms/fields"
+import type { Categoria } from "@/lib/areas"
 import type { Vaga } from "@/lib/data"
 import { formatBRL, isoToBrt } from "@/lib/parse"
 
@@ -18,34 +20,34 @@ function F({ label, children, optional }: { label: string; children: React.React
 /** Formulário de vaga (empresa e admin). Funciona sem JavaScript. */
 export function VagaForm({
   action,
-  areas,
+  categorias,
   vaga,
   submitLabel,
   tone = "empresa",
 }: {
   action: (f: FormData) => Promise<void>
-  areas: string[]
+  categorias: Categoria[]
   vaga?: Partial<Vaga>
   submitLabel: string
   tone?: "empresa" | "admin"
 }) {
   const e = isoToBrt(vaga?.entrevista_em)
-  const opts = Array.from(new Set([...areas, ...(vaga?.area ? [vaga.area] : [])]))
   return (
     <form action={action} className="space-y-5">
       {vaga?.id && <input type="hidden" name="id" value={vaga.id} />}
       <F label="Título da vaga">
-        <input name="titulo" required minLength={3} defaultValue={vaga?.titulo ?? ""} placeholder="Ex.: Garçom — turno noite" className={inputClass} />
+        <input name="titulo" required minLength={3} defaultValue={vaga?.titulo ?? ""} placeholder="Ex.: Vendedor(a) — loja no centro" className={inputClass} />
       </F>
-      <div className="grid gap-5 sm:grid-cols-[1fr_160px]">
-        <F label="Área / função">
-          <select name="area" required defaultValue={vaga?.area ?? ""} className={inputClass}>
-            <option value="">Selecione</option>
-            {opts.map((a) => (
-              <option key={a}>{a}</option>
-            ))}
-          </select>
-        </F>
+      <div className="grid items-start gap-5 sm:grid-cols-[1fr_160px]">
+        <AreaCombobox
+          label="Área / função"
+          name="area"
+          required
+          categorias={categorias}
+          defaultValue={vaga?.area ?? ""}
+          tone={tone === "admin" ? "admin" : "empresa"}
+          placeholder="Busque a função (ex.: vendedor)"
+        />
         <F label="Nº de vagas">
           <input name="quantidade" type="number" min={1} max={999} inputMode="numeric" defaultValue={vaga?.quantidade ?? 1} className={inputClass} />
         </F>

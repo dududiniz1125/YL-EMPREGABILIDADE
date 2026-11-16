@@ -7,7 +7,7 @@ export const siteConfig = {
   shortName: "YL",
   tagline: "Pontes entre talentos e oportunidades",
   description:
-    "Plataforma de recolocação profissional que conecta pessoas em busca de emprego a empresas com vagas abertas, de forma eficiente e humana.",
+    "Plataforma de recolocação profissional que conecta pessoas em busca de emprego a empresas com vagas abertas em todas as áreas: comércio e vendas, administrativo, educação, saúde, alimentação, logística e muito mais.",
 
   // URL pública. Em produção, defina NEXT_PUBLIC_SITE_URL (ex.: https://ylempregabilidade.com.br)
   url: (process.env.NEXT_PUBLIC_SITE_URL || "https://yl-empregabilidade.vercel.app").replace(/\/$/, ""),
@@ -25,22 +25,14 @@ export const siteConfig = {
     empresa: "https://formspree.io/f/mvkkwzrg",
   },
 
-  // Áreas/funções atendidas (a confirmar com o cliente)
-  areas: [
-    "Garçom / Garçonete",
-    "Cumim",
-    "Cozinheiro(a)",
-    "Auxiliar de cozinha",
-    "Atendimento",
-    "Outra",
-  ],
+  // Áreas/funções: veja lib/areas.ts (lista padrão) e /admin/configuracoes
   // Palavras que giram no título do topo
-  rotatingRoles: ["garçons", "cozinheiros", "cumins", "talentos"],
+  rotatingRoles: ["vendedores", "auxiliares administrativos", "professores", "cozinheiros", "recepcionistas", "talentos"],
 
   // Mensagens de sucesso dos formulários
   messages: {
     candidatoSucesso:
-      "Recebemos seu cadastro! Confirme seu e-mail, entre na sua área e faça a provinha.",
+      "Recebemos seu cadastro! Confirme seu e-mail e entre na sua área para se candidatar às vagas.",
     empresaSucesso:
       "Recebemos sua vaga! Nossa equipe vai entrar em contato para confirmar os detalhes.",
   },

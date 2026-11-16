@@ -2,6 +2,7 @@ import { PageHeader } from "@/components/app/app-shell"
 import { ConfirmSubmit, SubmitButton } from "@/components/app/confirm-submit"
 import { Card, Flash } from "@/components/app/ui"
 import { ChangePassword } from "@/components/app/change-password"
+import { AreaChips, AreaCombobox } from "@/components/forms/area-combobox"
 import { inputClass } from "@/components/forms/fields"
 import { excluirMinhaConta, salvarPerfil } from "@/app/candidato/actions"
 import { TURNOS } from "@/components/auth/candidato-signup"
@@ -24,7 +25,7 @@ function Field({ label, children, hint }: { label: string; children: React.React
 export default async function PerfilPage({ searchParams }: { searchParams: Promise<{ ok?: string; erro?: string }> }) {
   const sp = await searchParams
   const supabase = await getServerSupabase()
-  const [, { data: c }, { areas }] = await Promise.all([
+  const [, { data: c }, { categorias }] = await Promise.all([
     requireRole("candidato"),
     supabase
       .from("candidatos")
@@ -34,7 +35,6 @@ export default async function PerfilPage({ searchParams }: { searchParams: Promi
   ])
   if (!c) return null
   const exps = (c.experiencias ?? []) as Experiencia[]
-  const areaOptions = Array.from(new Set([...areas.filter((a) => a !== "Outra"), c.area_principal]))
 
   return (
     <>
@@ -56,28 +56,12 @@ export default async function PerfilPage({ searchParams }: { searchParams: Promi
             <Field label="Cidade / bairro">
               <input name="cidade" required defaultValue={c.cidade} className={inputClass} />
             </Field>
-            <Field label="Área principal">
-              <select name="area_principal" defaultValue={c.area_principal} className={inputClass}>
-                {areaOptions.map((a) => (
-                  <option key={a}>{a}</option>
-                ))}
-              </select>
-            </Field>
+            <AreaCombobox label="Área principal" name="area_principal" required categorias={categorias} defaultValue={c.area_principal} />
             <Field label="Pretensão salarial">
               <input name="pretensao" inputMode="numeric" defaultValue={c.pretensao_salarial ? formatBRL(c.pretensao_salarial) : ""} placeholder="R$ 0,00" className={inputClass} />
             </Field>
           </div>
-          <fieldset>
-            <legend className="text-ink mb-2 text-[0.95rem] font-semibold">Outras áreas que topa</legend>
-            <div className="grid gap-2 sm:grid-cols-3">
-              {areas.filter((a) => a !== "Outra").map((a) => (
-                <label key={a} className="border-input has-[:checked]:bg-sprout-soft/50 flex min-h-12 items-center gap-3 rounded-xl border bg-white px-4">
-                  <input type="checkbox" name="outras_areas" value={a} defaultChecked={c.outras_areas?.includes(a)} className="size-5 accent-[#3f6e1f]" />
-                  {a}
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          <AreaChips label="Outras áreas que topa" name="outras_areas" categorias={categorias} defaultValue={c.outras_areas ?? []} exclude={[c.area_principal]} />
           <fieldset>
             <legend className="text-ink mb-2 text-[0.95rem] font-semibold">Disponibilidade de turno</legend>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">

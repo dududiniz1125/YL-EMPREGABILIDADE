@@ -2,6 +2,7 @@ import { PageHeader } from "@/components/app/app-shell"
 import { SubmitButton } from "@/components/app/confirm-submit"
 import { btnClass, EmptyState, Flash, StatusBadge } from "@/components/app/ui"
 import { VagaCard } from "@/components/app/vaga-card"
+import { AreaOptions } from "@/components/forms/area-options"
 import { inputClass } from "@/components/forms/fields"
 import { candidatar } from "@/app/candidato/actions"
 import { requireRole } from "@/lib/auth"
@@ -15,7 +16,7 @@ export default async function VagasPage({ searchParams }: { searchParams: Promis
   let q = supabase.from("vagas").select(VAGA_COLS).eq("status", "aberta").order("created_at", { ascending: false }).limit(100)
   if (sp.area) q = q.eq("area", sp.area)
   if (sp.bairro) q = q.ilike("bairro", `%${sp.bairro.replace(/[%_]/g, "")}%`)
-  const [, { areas }, { data: vagas }, { data: minhas }] = await Promise.all([
+  const [, { categorias }, { data: vagas }, { data: minhas }] = await Promise.all([
     requireRole("candidato"),
     getPublicConfig(),
     q,
@@ -34,9 +35,7 @@ export default async function VagasPage({ searchParams }: { searchParams: Promis
           <span className="text-ink text-sm font-semibold">Área</span>
           <select name="area" defaultValue={sp.area ?? ""} className={inputClass}>
             <option value="">Todas as áreas</option>
-            {areas.filter((a) => a !== "Outra").map((a) => (
-              <option key={a}>{a}</option>
-            ))}
+            <AreaOptions categorias={categorias} />
           </select>
         </label>
         <label className="flex flex-col gap-1.5">

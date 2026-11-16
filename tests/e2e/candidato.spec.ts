@@ -2,13 +2,13 @@ import { expect, test } from "@playwright/test"
 
 import { waitForEmailLink } from "../helpers/mail"
 import { adminDb, createUser, createVaga, empresaMeta, uniqueEmail } from "../helpers/supa"
-import { cardWithHeading, loginUI } from "../helpers/ui"
+import { cardWithHeading, loginUI, pickArea } from "../helpers/ui"
 
-test("candidato: cadastro completo → confirmação → login → candidatura → status", async ({ page }) => {
+test("candidato: cadastro completo → confirmação → login → candidatura → status (área sem prova)", async ({ page }) => {
   const emp = await createUser(empresaMeta({ empresa: "Bistrô do Teste" }), "emp")
   await adminDb().from("empresas").update({ status: "aprovada" }).eq("id", emp.id)
-  const titulo = `Cumim noite ${Date.now()}`
-  await createVaga(emp.id, "aberta", { titulo, area: "Cumim", bairro: "Pinheiros" })
+  const titulo = `Professor de educação física ${Date.now()}`
+  await createVaga(emp.id, "aberta", { titulo, area: "Professor(a) de educação física", bairro: "Pinheiros" })
 
   const email = uniqueEmail("cand")
   await page.goto("/cadastro/candidato/")
@@ -20,13 +20,14 @@ test("candidato: cadastro completo → confirmação → login → candidatura �
   await page.getByLabel("Nome completo").fill("Joana Teste")
   await page.getByLabel("E-mail").fill(email)
   await page.getByLabel("Cidade / bairro").fill("São Paulo, Lapa")
-  await page.getByLabel("Área principal").selectOption("Cumim")
+  // busca sem acento encontra a função
+  await pickArea(page, /^Área principal/, "educacao fisica", "Professor(a) de educação física")
   await page.getByRole("button", { name: "Continuar" }).click()
 
   // passo 2
   await expect(page.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "2")
   await page.getByLabel("Empresa").first().fill("Bar do Zé")
-  await page.getByLabel("Função").first().fill("Cumim")
+  await page.getByLabel("Função").first().fill("Professor")
   await page.getByLabel("Pretensão salarial").pressSequentially("220000")
   await page.getByLabel("Noite").check()
   await page.getByRole("button", { name: "Continuar" }).click()
@@ -51,8 +52,10 @@ test("candidato: cadastro completo → confirmação → login → candidatura �
   await page.getByRole("button", { name: "Sair" }).first().click()
   await expect(page).toHaveURL(/\/entrar\/\?ok=saiu/)
   await loginUI(page, email, "Senha1234", /\/candidato\/$/)
+  // área sem prova: nada de prova obrigatória
+  await expect(page.getByText("Sua área não tem provinha")).toBeVisible()
 
-  await page.goto("/candidato/vagas/?area=Cumim")
+  await page.goto(`/candidato/vagas/?area=${encodeURIComponent("Professor(a) de educação física")}`)
   await cardWithHeading(page, titulo).getByRole("button", { name: "Quero me candidatar" }).click()
   await expect(page.getByText("Candidatura enviada!")).toBeVisible()
 

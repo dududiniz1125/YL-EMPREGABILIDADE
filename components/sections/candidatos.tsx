@@ -7,7 +7,7 @@ import { SectionHeading } from "@/components/site/section-heading"
 
 const perks = [
   "Cadastro gratuito e rápido",
-  "Provinha online da sua área",
+  "Vagas de todas as áreas: comércio, escritório, educação e mais",
   "Aviso de vagas compatíveis por e-mail",
 ]
 
@@ -64,7 +64,7 @@ export function Candidatos() {
               ))}
             </ol>
             <p className="text-ink-soft bg-sprout-soft/60 mt-6 rounded-2xl p-4 text-[0.95rem]">
-              Depois do cadastro, você faz a <strong className="text-ink">provinha online</strong> da sua área e já pode se candidatar às vagas abertas.
+              Depois do cadastro, você já pode se candidatar às vagas abertas. Se a sua área tiver <strong className="text-ink">provinha online</strong>, ela aparece na sua área para você mostrar o que sabe.
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Link

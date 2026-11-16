@@ -25,7 +25,7 @@ const flash: Record<string, string> = { salva: "Vaga atualizada.", encerrada: "V
 export default async function VagaEmpresaPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ ok?: string; erro?: string }> }) {
   const [{ id }, sp] = await Promise.all([params, searchParams])
   const supabase = await getServerSupabase()
-  const [, { data: vaga }, { data: inscritos }, { areas }] = await Promise.all([
+  const [, { data: vaga }, { data: inscritos }, { categorias }, { data: provasAtivas }] = await Promise.all([
     requireRole("empresa"),
     supabase.from("vagas").select(VAGA_COLS).eq("id", id).maybeSingle(),
     supabase
@@ -34,7 +34,9 @@ export default async function VagaEmpresaPage({ params, searchParams }: { params
       .eq("vaga_id", id)
       .order("created_at"),
     getPublicConfig(),
+    supabase.from("provas").select("area").eq("ativa", true),
   ])
+  const areasComProva = new Set((provasAtivas ?? []).map((p) => p.area))
   if (!vaga) notFound()
   const v = vaga as Vaga
 
@@ -77,7 +79,13 @@ export default async function VagaEmpresaPage({ params, searchParams }: { params
                     </div>
                     <p className="mt-3">
                       <span className="text-ink-soft text-sm">Nota da prova: </span>
-                      <strong className="text-ink">{c.nota_prova !== null ? Number(c.nota_prova).toLocaleString("pt-BR") : "não fez"}</strong>
+                      <strong className="text-ink">
+                        {c.nota_prova !== null
+                          ? Number(c.nota_prova).toLocaleString("pt-BR")
+                          : areasComProva.has(v.area)
+                            ? "não fez"
+                            : "sem prova"}
+                      </strong>
                     </p>
                     {exps.length > 0 && (
                       <ul className="text-ink-soft mt-2 space-y-1 text-sm">
@@ -129,7 +137,7 @@ export default async function VagaEmpresaPage({ params, searchParams }: { params
             <p className="text-ink-soft">Esta vaga está encerrada.</p>
           ) : (
             <>
-              <VagaForm action={editarVaga} areas={areas} vaga={v} submitLabel="Salvar alterações" />
+              <VagaForm action={editarVaga} categorias={categorias} vaga={v} submitLabel="Salvar alterações" />
               <form action={encerrarVaga} className="border-line mt-6 border-t pt-6">
                 <input type="hidden" name="id" value={v.id} />
                 <ConfirmSubmit

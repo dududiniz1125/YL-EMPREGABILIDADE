@@ -22,7 +22,7 @@ const erros: Record<string, string> = {
 export default async function AdminVaga({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ ok?: string; erro?: string; busca?: string }> }) {
   const [{ id }, sp] = await Promise.all([params, searchParams])
   const db = await getServerSupabase()
-  const [, { data: vaga }, { data: inscritos }, { areas }] = await Promise.all([
+  const [, { data: vaga }, { data: inscritos }, { categorias }] = await Promise.all([
     requireRole("admin"),
     db.from("vagas").select(`${VAGA_COLS}, empresas(nome, status)`).eq("id", id).maybeSingle(),
     db.from("candidaturas").select("id, status, indicada_por_admin, created_at, candidatos(id, nome, area_principal)").eq("vaga_id", id).order("created_at"),
@@ -135,7 +135,7 @@ export default async function AdminVaga({ params, searchParams }: { params: Prom
 
       <h2 className="text-ink mt-10 mb-4 text-2xl font-semibold">Editar vaga</h2>
       <Card className="max-w-3xl">
-        <VagaForm action={editarVagaAdmin} areas={areas} vaga={v} submitLabel="Salvar vaga" tone="admin" />
+        <VagaForm action={editarVagaAdmin} categorias={categorias} vaga={v} submitLabel="Salvar vaga" tone="admin" />
       </Card>
     </>
   )
